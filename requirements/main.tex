@@ -1,0 +1,41 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+
+%opening
+\title{JobAdder: Requirements}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\section{Mandatory}
+\subsection{General}
+\begin{enumerate}
+ \item JA must follow an object-oriented design.
+ \item JA must be implemented in Python 3.
+ \item All JA references and methods must have consistent Python type hints.
+ \item JA must provide a central server that assigns user jobs to work machines.
+ \item JA must provide a user client (UC) that transmits a user's job request to the central server.
+ \item JA must provide a work machine client (WMC) that receives jobs from the central server and runs them on a work machine.
+ \item All components of JA must work under the following Linux distributions: Ubuntu 18.04, CentOS 7.
+ \item Users must be notified when one of their jobs terminates.
+ \item Users must be able to query the state of jobs and work machines via a web interface or API.
+\end{enumerate}
+\subsection{User Client}
+\begin{enumerate}
+ \item UCs must be accessible through a CLI.
+ \item UCs must provide to the user the same functionality as if the user was working directly on a work machine.
+ \item UCs must allow the user to specify an operating system on which the job should be run.
+ \item UCs must allow the user to specify minimum hardware requirements for a job: RAM, CPU thread count, GPU memory/model/speed.
+ \item UCs must allow the user to specify a priority for a job.
+\end{enumerate}
+\section{Optional}
+\begin{enumerate}
+ \item Blocking mode: wait for the job to finish before client returns.
+ \item Path translation: handle different mount point locations.
+ \item Attach to stdout of running job or read log output (something like "tail -f").
+ \item Estimate ETA for running jobs.
+\end{enumerate}
+
+\end{document}
