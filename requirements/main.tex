@@ -1,5 +1,7 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage{graphicx}       % provides commands for including figures
+
 
 %opening
 \title{JobAdder: Requirements}
@@ -20,7 +22,13 @@
  \item JA must provide a work machine client (WMC) that receives jobs from the central server and runs them on a work machine.
  \item All components of JA must work under the following Linux distributions: Ubuntu 18.04, CentOS 7.
  \item Users must be notified when one of their jobs terminates.
- \item Users must be able to query the state of jobs and work machines via a web interface or API.
+\end{enumerate}
+\subsection{Central Server}
+\begin{enumerate}
+ \item CSs must be accessible through a CLI.
+ \item CSs must store data on queued/running/past jobs in a database.
+ \item CS job database must not change on CS crash/restart.
+ \item Users must be able to query the state of jobs and work machines from a CSs via a web interface or API.
 \end{enumerate}
 \subsection{User Client}
 \begin{enumerate}
