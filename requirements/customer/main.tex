@@ -1,0 +1,22 @@
+\section{Customer requirements}
+\subsection{General}
+\begin{enumerate}
+ \item JA must provide a central server that assigns user jobs to work machines.
+ \item JA must provide a user client (UC) that transmits a user's job request to the central server.
+ \item JA must provide a work machine client (WMC) that receives jobs from the central server and runs them on a work machine.
+ \item All components of JA must work under the following Linux distributions: Ubuntu 18.04, CentOS 7.
+ \item Users must be notified when one of their jobs terminates.
+\end{enumerate}
+\subsubsection{Technical requirements}
+\begin{enumerate}
+ \item JA must follow an object-oriented design.
+ \item JA must be implemented in Python 3.
+ \item All JA references and methods must have consistent Python type hints.
+\end{enumerate}
+\subsection{Optional}
+\begin{enumerate}
+ \item Blocking mode: wait for the job to finish before client returns.
+ \item Path translation: handle different mount point locations.
+ \item Attach to stdout of running job or read log output (something like "tail -f").
+ \item Estimate ETA for running jobs.
+\end{enumerate}
