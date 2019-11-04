@@ -1,0 +1,13 @@
+\subsection{Usage scenarios}
+\begin{enumerate}
+	\item High priority task.
+	\begin{itemize}
+		\item Bob has to do some urgent simulations.
+		\item Bob inputs the task and data, and sets the priority option to high.
+		\item System checks if the task can be directly executed somewhere.
+		If that is the case, the task is executed and the scenario ends.
+		\item System tries to find a running task with lower priority then Bob's task, so that Bob's task can be executed at it's place.
+		If that is the case, the task with lower priority is stoped and replaced with Bob's.
+		\item If all running tasks are with equal or greater priority, the User is notified that he has to wait.
+	\end{itemize}
+\end{enumerate}
