@@ -1,0 +1,9 @@
+# Based on https://tex.stackexchange.com/questions/398830/how-to-build-my-latex-automatically-using-travis-ci
+#
+sudo: required
+language: generic
+services: docker
+
+script:
+  - docker pull dxjoke/tectonic-docker
+  - docker run --mount src=$TRAVIS_BUILD_DIR/requirements,target=/usr/src/tex,type=bind dxjoke/tectonic-docker /bin/sh -c "tectonic main.tex"
