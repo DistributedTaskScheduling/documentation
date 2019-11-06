@@ -1,0 +1,17 @@
+\section{System model}
+The core structure of the system is based on the Client/server architecture %(right?)
+
+\subsection{Client}
+The client creates a job, specifies the OS, the hardware requirements and the priority of the job. The client then sends their job to the server via CLI. \newline
+The client could also interrupt or pause and resume a job during it's execution.
+
+\subsection{Central server/Gateway machine}
+The server receives jobs from clients, and passes them on to a remote working machine (/computational node). \newline
+It then receives results from the computational node and sends them to the client once the task is fulfilled. \newline
+During the execution of a job, further commands like pausing and interrupting can be requested from the client. \newline
+The server continually (every 10s?) receives results from the working machine and saves them. \newline
+The data in the server (state of jobs) is accessible through a web interface or an API.
+%Or should we save the results on the computational node?
+
+\subsection{Working machine/computational node}
+A computational node receives orders from the central server and executes them. It also continually sends back results to the server.

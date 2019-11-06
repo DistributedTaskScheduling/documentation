@@ -1,0 +1,34 @@
+\section{Requirements}
+
+\subsection{Mandatory}
+\begin{itemize}
+\item JA must assign user jobs to work machines.
+ \item JA must provide a user client on which a user can make job requests.
+\item JA must be accessible through a CLI.
+\item Users can specify a priority for a job.
+\item Users can specify the minimum hardware requirements for a job: RAM, CPU thread count, GPU memory/model/speed.
+\item Users can specify an operating system on which the job should be run.
+\item The system must store all the data of queued, running and fulfilled jobs.
+\item The stored data should not get lost on a system crash or restart.
+\item Users can query the state of running jobs from a web interface or an API.
+\item Users can start, pause, resume and interrupt a running job.
+\item Users must be notified once a job is completed.
+%not really sure about how to include the following item in the requirements.
+\item JA has the same functionality as a normal work machine.
+\end{itemize}
+
+\subsection{Optional}
+\begin{itemize}
+\item Blocking mode: wait for the job to finish before client returns.
+\item Path translation: handle different mount point locations.
+\item Attach to stdout of running job or read log output (something like ”tail
+-f”).
+\item Estimate ETA for running jobs.
+%There will be more.
+\end{itemize}
+
+\subsection{Limits}
+\begin{itemize}
+\item Users cannot edit the specifications of a job once it's requested.
+\item Users cannot interrupt, pause or resume jobs they didn't start.
+\end{itemize}
