@@ -1,0 +1,55 @@
+\subsection{Functional requirements}
+\subsubsection{Main features}
+\begin{enumerate}
+  \item[CSF10] The central server shall distribute \glspl{job}
+    among the available work machines using the scheduling algorithm.
+  \item[CSF20] Central server shall accept the following requests:
+  \begin{enumerate}
+    \item[CSF21] Schedule a new \gls{job} for execution.
+    \item[CSF22] Terminate a \gls{job}.
+    \item[CSF23] Initiate a SSH tunnel to a \gls{job}'s container, provided that the
+      \gls{job status} is Running, Done or Killed, but the corresponding docker image
+      has not been deleted yet.
+  \end{enumerate}
+    Each command should also contain information(\gls{UID}, \gls{GID}) about the actual user submitting the job.
+  \item[CSF30] Only processes whose effective user is root shall be allowed to create the requests in CSF20.
+  \item[CSF40] The central server shall include a utility program to create the requests described in CSF20.
+    Each such utility program shall submit the request with the appropriate real \gls{UID} and real \gls{GID}
+    of the user running the utility program.
+
+  \item[CSF50] Central server shall provide network API to:
+  \begin{enumerate}
+    \item[CSF51] Get statistics about workload of the connected worker machines.
+      For each work machine:
+      \begin{itemize}
+        \item CPU Load in percentage.
+        \item Amount of free and used CPU threads.
+        \item Amount of free and used RAM.
+        \item Amount of free and used swap space.
+        \item Work machine \gls{ID}.
+      \end{itemize}
+    \item[CSF52] Get information about a job given its \gls{ID}:
+    \begin{itemize}
+      \item The user which the job belongs to.
+      \item \Gls{job priority}
+      \item \Gls{job status}
+      \item \Gls{timestamp} of when the job was scheduled.
+      \item \Gls{timestamp} of when the job has finished running.
+      \item Total amount of time spent in queue.
+      \item If \gls{job status} is not Queued:
+      \begin{itemize}
+        \item Total amount of time spent running.
+        \item Number of allocated CPU cores.
+        \item Allocated RAM for the job in megabytes.
+        \item Current utilization of allocated CPU cores, in percentage.
+        \item Current utilization of allocated RAM, in percentage.
+      \end{itemize}
+    \end{itemize}
+    \item[CSF53] Get a list of \glspl{ID} of jobs belonging to a given user.
+    \item[CSF54] Get a list of \glspl{ID} of jobs which have been running in the
+      past X hours.
+    \item[CSF55] Get a list of \glspl{ID} of jobs which are running on the work machine with the given
+      \gls{ID}.
+  \end{enumerate}
+  \item[CSF60] The requests described in CSF40 shall be accessible by any user or external entity.
+\end{enumerate}

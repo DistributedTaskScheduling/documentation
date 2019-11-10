@@ -1,12 +1,11 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[nonumberlist,nopostdot]{glossaries}     % provides glossary commands
+\usepackage[nonumberlist,nopostdot]{glossaries-extra}     % provides glossary commands
 \usepackage{graphicx}       % provides commands for including figures
 \usepackage{amsmath}
 
 % Glossary needs to be before \begin{document}
-\makenoidxglossaries
 \input{customer/glossary}
 
 %opening
@@ -23,9 +22,5 @@
 \input{customer/cli}
 \input{system/main}
 
-\gls{job}
-\gls{job status}
-\gls{job priority}
-\printnoidxglossaries
-
+\printunsrtglossaries
 \end{document}

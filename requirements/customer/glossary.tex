@@ -27,12 +27,12 @@
   name=job priority,
   plural=job priorities,
   description={
-    The priority of a job can be:
+    The priority of a job can be one of the following (in ascending order):
     \begin{itemize}
-      \item Low - the job should be executed only when a server is going to be idle otherwise.
-      \item Normal - the job should be executed as soon as there is a suitable server and no tasks of higher importance.
-      \item High - the job should be executed as soon as possible, except if all work machines are already busy with Urgent jobs.
-      \item Urgent - the job should be executed immediately, even if this means pausing other tasks.
+      \item Low
+      \item Medium
+      \item High
+      \item Urgent
     \end{itemize}
   }
 }
