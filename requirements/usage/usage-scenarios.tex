@@ -6,10 +6,9 @@
     \item Bob inputs the task and data. He also sets the priority option to high.
     \item System checks if the task can be directly executed somewhere.
     If that is the case, the task is executed and the scenario ends.
-    \item System tries to find the running task with lowest priority.
-    \item System checks if this task has lower priority than Bob's, if that is the case it gets paused and replaced with Bob's.
-    \item System ensures that the paused task will be continued when that is possible.
-    \item If all running tasks are with equal or greater priority, the User is notified that he has to wait.
+    \item System checks if enough resources can be freed for Bob's task by pausing one or more appropriate running tasks.
+    \item System ensures that the paused tasks will be continued when that is possible.
+    \item If there are no appropriate tasks to pause, the User is notified that he has to wait.
   \end{itemize}
   \item User checks the state of the task.
   \begin{itemize}
