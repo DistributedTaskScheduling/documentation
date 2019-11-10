@@ -1,0 +1,102 @@
+\newglossaryentry{ID}
+{
+  name=ID,
+  plural=IDs,
+  description={
+    An ID is a string of digits, english letters (both lower- and uppercase) and slashes '-'.
+  }
+}
+\newglossaryentry{job status}
+{
+  name=job status,
+  plural=job status,
+  description={
+    The status of a job can be:
+    \begin{itemize}
+      \item Queued - the job is waiting for a suitable work machine to become available.
+      \item Running - the job is running on some work machine.
+      \item Paused - the job has been running, but has been paused to allow for execution of other jobs.
+      \item Done - the job has finished running.
+      \item Killed - the job was forcefully stopped.
+      \item Crashed - the work machine the job was running on shut down unexpectedly.
+    \end{itemize}
+  }
+}
+\newglossaryentry{job priority}
+{
+  name=job priority,
+  plural=job priorities,
+  description={
+    The priority of a job can be:
+    \begin{itemize}
+      \item Low - the job should be executed only when a server is going to be idle otherwise.
+      \item Normal - the job should be executed as soon as there is a suitable server and no tasks of higher importance.
+      \item High - the job should be executed as soon as possible, except if all work machines are already busy with Urgent jobs.
+      \item Urgent - the job should be executed immediately, even if this means pausing other tasks.
+    \end{itemize}
+  }
+}
+\newglossaryentry{job}
+{
+  name=job,
+  plural=jobs,
+  description={
+      A job in the context of JobAdder consists of the following:
+      \begin{itemize}
+        \item A unique job \gls{ID}.
+        \item A program to be executed.
+        \item A unix user who owns the job.
+        \item \Gls{job priority}.
+        \item Number of CPU threads needed for the execution of the program, an integer.
+        \item Amount of RAM in megabytes needed for the execution of the program, an integer.
+        \item Paths in the network storage needed for the application.
+        \item One of:
+        \begin{itemize}
+          \item A Dockerfile providing instructions to build program environment.
+          \item The name of predefined container environment (TODO: link to list of environments we want to provide, in the WMC)
+        \end{itemize}
+     \end{itemize}
+  }
+}
+\newglossaryentry{timestamp}
+{
+  name=timestamp,
+  plural=timestamps,
+  description={
+    A timestamp is a combination of the date and time of a particular point in time.
+    It has the following format: "YYYY-DD-MM HH:MM:SS".
+  }
+}
+\newglossaryentry{administrator}
+{
+  name=administrator,
+  plural=administrators,
+  description={
+    An administrator is a user who can terminate queued and running jobs from all users.
+  }
+}
+\newglossaryentry{UID}
+{
+  name=UID,
+  plural=UIDs,
+  description={
+    A UID (user identifier) is a number assigned by Linux to each user on the system.
+  }
+}
+\newglossaryentry{GID}
+{
+  name=GID,
+  plural=GIDs,
+  description={
+    A GID (group identifier) is a number assigned by Linux to each group on the system.
+  }
+}
+\newglossaryentry{Dockerfile}
+{
+  name=Dockerfile,
+  plural=Dockerfiles,
+  description={
+     A Dockerfile is a text document that contains all the commands a user could call on the
+     command line to assemble an image.
+  }
+}
