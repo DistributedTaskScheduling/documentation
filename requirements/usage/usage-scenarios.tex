@@ -7,15 +7,15 @@
     \item System checks if the task can be directly executed somewhere.
     If that is the case, the task is executed and the scenario ends.
     \item System checks if enough resources can be freed for Bob's task by pausing one or more appropriate running tasks.
-    \item System ensures that the paused tasks will be continued when that is possible.
-    \item If there are no appropriate tasks to pause, the User is notified that he has to wait.
+    \item System ensures that the paused tasks will be continued once enough resources are available.
+    \item If there are no appropriate tasks to pause, the user is notified that he has to wait.
   \end{itemize}
   \item User checks the state of the task.
   \begin{itemize}
     \item Bob schedules a task that he has not thoroughly tested.
     Bob is concerned that the task will not work as intended.
     \item System has available resources, so it starts the task.
-    \item After 15 minutes Bob wants to check how the task is going.
+    \item After 15 minutes Bob wants to check if the task is working as intended.
     \item System enables Bob to inspect the running task.
     \item Bob finds that the task is not outputting the correct results.
     \item Bob stops the task.
