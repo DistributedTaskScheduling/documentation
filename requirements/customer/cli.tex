@@ -56,8 +56,8 @@ If set to 0, no information is printed out.}
 \jacommand{add}
 {gpu, mount, name, priority, server, ram, threads}
 {Sends one or more job requests to the server.
-If targets are Docker containers the consists of simply running the container.
-If targets are configuration files with a specified terminal command the worker executes the given terminal command.
+If targets are Docker containers the job consists of simply running the container.
+If targets are configuration files with a specified terminal command the job consists of running the specified terminal command.
 Otherwise targets are interpreted as terminal commands}
 \jaoption{gpu}{g}{
 If set to true, informs the server that the job requires a gpu.
