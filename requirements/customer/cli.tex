@@ -98,5 +98,8 @@ In addition to the one below, options from add command can be used as constraint
 \jacommand{stop}{None}{Stops instances of the JobAdder server.}
 
 \subsubsection{Worker Client}
-\jacommand{start}{None}{Starts an instance of the JobAdder worker client.}
+\jacommand{start}{server}{Starts an instance of the JobAdder worker client.}
+\jaoption{server}{s}
+{Server to receive jobs from.
+Defaults to localhost.}
 \jacommand{stop}{None}{Stops instances of the JobAdder worker client.}
