@@ -1,9 +1,9 @@
 *.aux
 *.log
 *.pdf
-*.synctex.gz
 *.glo
 *.ist
 *.log
 *.toc
 *.out
+*.gz
