@@ -1,0 +1,48 @@
+\subsection{Scheduling Algorithm}
+This section describes how the central server distributes jobs to work machines: the \textit{scheduling algorithm}.
+Put briefly, the scheduling algorithm takes a list of jobs and decides which ones to run on the available work machines.
+The scheduling algorithm has the following goals:
+\begin{itemize}
+\item Keep work machines busy: there should be no idle work machines if there are pending jobs.
+\item Consider job priorities: jobs with high priorities should be worked on first.
+\item Consider time of job submission: jobs that were submitted first should be worked on first (if priorities are equal).
+\end{itemize}
+The scheduling algorithm operates under the following conditions:
+\begin{itemize}
+\item Jobs arrive at unforeseen times.
+\item Time required to complete jobs is unknown.
+\item Jobs cannot be transferred from one work machine to another.
+\item Jobs cannot be canceled and restarted.
+\item Job preemption is limited: if a job is paused it has to be kept in memory.
+Note that memory includes swap files.
+\item Some jobs cannot be canceled due to software licensing restrictions.
+\end{itemize}
+The scheduling algorithm takes the following parameters as input:
+\begin{itemize}
+\item List of pending jobs.
+\item List of running/paused jobs per work machine.
+\item Amount of work machine specific resources: CPU threads, memory, etc.
+These resources can typically be freed by pausing jobs.
+\item Amount of work machine unspecific resources: software licenses.
+Whether these resources can be freed by pausing jobs depends on the software.
+\item Size of work machine swap files.
+This resource is used exclusively for holding paused jobs.
+It has no influence on running jobs.
+\end{itemize}
+The scheduling algorithm reevaluates which jobs to run every time a job finishes running or when a new job request arrives.
+The scheduling algorithm executes the following:
+\begin{enumerate}
+\item If there are pending urgent jobs:
+Assign oldest urgent jobs to work machines until urgent jobs or resources run out.
+Non-urgent running jobs will be paused if possible and necessary to run more urgent jobs.
+\item If there are paused high-priority jobs:
+Assign oldest paused high-priority jobs to work machines until old paused high-priority jobs or resources run out.
+Running jobs with equal or lower priority will be paused if possible and necessary to run more old paused high-priority jobs.
+\item Repeat 2. for paused medium-priority jobs.
+\item Repeat 2. for paused low-priority jobs.
+\item If there are pending high-priority jobs:
+Assign oldest paused high-priority jobs to work machines until old paused high-priority jobs or resources run out.
+Running jobs with equal or lower priority will be paused if possible and necessary to run the oldest available high-priority job.
+\item Repeat 5. for pending medium-priority jobs.
+\item Repeat 5. for pending low-priority jobs.
+\end{enumerate}
