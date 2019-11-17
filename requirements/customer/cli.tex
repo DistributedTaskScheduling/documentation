@@ -1,15 +1,16 @@
 \newcommand{\jacommand}[3]{
-
-\textsc{\large{\textbf{#1}}}
+\textsc{\LARGE{\textbf{#1}}}
 \begin{itemize}
-\item[\textbf{Options:}] #2
-\item[\textbf{Effect:}] #3
+\item \textbf{Options:} #2
+\item \textbf{Effect:} #3
 \end{itemize}
 }
+\newcommand{\jaoptionheader}{\textsc{\textbf{Option descriptions:}}\newline\newline}
 \newcommand{\jaoption}[3]{
+\textbf{#1}
 \begin{itemize}
-\item[] \textbf{#1} (#2)
-\item[\textbf{Effect:}] #3
+\item \textbf{Short form:} #2
+\item \textbf{Effect:} #3
 \end{itemize}
 }
 \subsection{Command Line Interface}
@@ -59,6 +60,7 @@ If set to 0, no information is printed out.}
 If targets are Docker containers the job consists of simply running the container.
 If targets are configuration files with a specified terminal command the job consists of running the specified terminal command.
 Otherwise targets are interpreted as terminal commands}
+\jaoptionheader
 \jaoption{gpu}{g}{
 If set to true, informs the server that the job requires a gpu.
 If set to a string that can be interpreted as VRAM amount, informs the server that a GPU with this amount of VRAM is required for the job.
@@ -79,26 +81,20 @@ Defaults to localhost.}
 {If set to a string that can be interpreted as RAM amount, informs the server that this amount of RAM is required for the job.}
 \jaoption{threads}{t}
 {If set to an integer, informs the server that this number of threads is required for the job.}
-
-\jacommand{pause}{None}{Pauses the job with the specified name.}
-
 \jacommand{query}{user}
 {Prints out information on running/queued/past jobs (specified by target).
 In addition to the one below, options from add command can be used as constraints.}
+\jaoptionheader
 \jaoption{after}{a}{Only return jobs added after the given point in time.}
 \jaoption{before}{b}{Only return jobs added before the given point in time.}
 \jaoption{user}{u}{Filter query by user that added the job.}
-
-\jacommand{resume}{None}{Resumes the job with the specified name.}
-
 \jacommand{stop}{None}{Stops the job with the specified name.}
-
 \subsubsection{Server}
 \jacommand{start}{None}{Starts an instance of the JobAdder server.}
 \jacommand{stop}{None}{Stops instances of the JobAdder server.}
-
 \subsubsection{Worker Client}
 \jacommand{start}{server}{Starts an instance of the JobAdder worker client.}
+\jaoptionheader
 \jaoption{server}{s}
 {Server to receive jobs from.
 Defaults to localhost.}
