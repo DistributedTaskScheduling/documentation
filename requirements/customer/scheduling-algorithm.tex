@@ -15,7 +15,7 @@ The scheduling algorithm operates under the following conditions:
 \item Jobs cannot be canceled and restarted.
 \item Job preemption is limited: if a job is paused it has to be kept in memory.
 Note that memory includes swap files.
-\item Some jobs cannot be canceled due to software licensing restrictions.
+\item Some jobs cannot be paused due to software licensing restrictions.
 \end{itemize}
 The scheduling algorithm takes the following parameters as input:
 \begin{itemize}
@@ -30,18 +30,18 @@ This resource is used exclusively for holding paused jobs.
 It has no influence on running jobs.
 \end{itemize}
 The scheduling algorithm reevaluates which jobs to run every time a job finishes running or when a new job request arrives.
-The scheduling algorithm executes the following:
+The scheduling algorithm assigns jobs to work machines as follows:
 \begin{enumerate}
 \item If there are pending urgent jobs:
 Assign oldest urgent jobs to work machines until urgent jobs or resources run out.
 Non-urgent running jobs will be paused if possible and necessary to run more urgent jobs.
 \item If there are paused high-priority jobs:
-Assign oldest paused high-priority jobs to work machines until old paused high-priority jobs or resources run out.
+Assign oldest paused high-priority jobs to work machines until paused high-priority jobs or resources run out.
 Running jobs with equal or lower priority will be paused if possible and necessary to run more old paused high-priority jobs.
 \item Repeat 2. for paused medium-priority jobs.
 \item Repeat 2. for paused low-priority jobs.
 \item If there are pending high-priority jobs:
-Assign oldest paused high-priority jobs to work machines until old paused high-priority jobs or resources run out.
+Assign oldest paused high-priority jobs to work machines until paused high-priority jobs or resources run out.
 Running jobs with equal or lower priority will be paused if possible and necessary to run the oldest available high-priority job.
 \item Repeat 5. for pending medium-priority jobs.
 \item Repeat 5. for pending low-priority jobs.
