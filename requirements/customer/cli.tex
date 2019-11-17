@@ -43,7 +43,6 @@ JobAdder CLI options override the values of configuration files.
 If no command is given, the general help text for the given component is printed out.
 \subsubsection{Shared Options}
 \jaoption{config}{c}{Overrides the global configuration file with the given configuration file.}
-\jaoption{detach}{d}{Detaches the execution of the given command from the command line.}
 \jaoption{help}{h}{
 Prints out a list of the available commands. 
 When used in conjunction with a command:
@@ -52,15 +51,29 @@ prints out more detailed information on the given command and a list of the avai
 Determines the amount of information printed out.
 If set to 2, detailed information is printed out.
 If set to 1, only high-level information is printed out (default).
-If set to 0, no information is printed out.}
+If set to 0, no information is printed out.
+Note that this option affects both logs and command line output.
+}
 \subsubsection{User Client}
 \jacommand{add}
-{gpu, mount, name, priority, server, ram, threads}
+{attach, gpu, mount, name, priority, server, ram, threads}
 {Sends one or more job requests to the server.
 If targets are Docker containers the job consists of simply running the container.
 If targets are configuration files with a specified terminal command the job consists of running the specified terminal command.
-Otherwise targets are interpreted as terminal commands}
+Otherwise targets are interpreted as terminal commands.
+}
 \jaoptionheader
+\jaoption{attach}{a}{
+If set to true, attaches the user client command line to the command line output of the job:
+the command line output of the job is forwarded to the command line of the user client.
+The user client command line will be blocked until the job terminates.
+Incompatible with "block".
+}
+\jaoption{block}{b}{
+The user client command line will be blocked until the job terminates.
+The command line output of the job is \textbf{not} forwarded to the command line of the user client.
+Incompatible with "attach".
+}
 \jaoption{gpu}{g}{
 If set to true, informs the server that the job requires a gpu.
 If set to a string that can be interpreted as VRAM amount, informs the server that a GPU with this amount of VRAM is required for the job.
