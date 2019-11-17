@@ -3,7 +3,7 @@ This section describes how the central server distributes jobs to work machines:
 Put briefly, the scheduling algorithm takes a list of jobs and decides which ones to run on the available work machines.
 The scheduling algorithm has the following goals:
 \begin{itemize}
-\item Keep work machines busy: there should be no idle work machines if there are pending jobs.
+\item Keep work machines busy: there should be no idle work machines if there are pending jobs that could be run on them.
 \item Consider job priorities: jobs with high priorities should be worked on first.
 \item Consider time of job submission: jobs that were submitted first should be worked on first (if priorities are equal).
 \end{itemize}
