@@ -36,12 +36,12 @@ The scheduling algorithm assigns jobs to work machines as follows:
 Assign oldest urgent jobs to work machines until urgent jobs or resources run out.
 Non-urgent running jobs will be paused if possible and necessary to run more urgent jobs.
 \item If there are paused high-priority jobs:
-Assign oldest paused high-priority jobs to work machines until paused high-priority jobs or resources run out.
+Resume oldest paused high-priority jobs until paused high-priority jobs or resources run out.
 Running jobs with equal or lower priority will be paused if possible and necessary to run more old paused high-priority jobs.
 \item Repeat 2. for paused medium-priority jobs.
 \item Repeat 2. for paused low-priority jobs.
 \item If there are pending high-priority jobs:
-Assign oldest paused high-priority jobs to work machines until paused high-priority jobs or resources run out.
+Assign oldest pending high-priority jobs to work machines until pending high-priority jobs or resources run out.
 Running jobs with equal or lower priority will be paused if possible and necessary to run the oldest available high-priority job.
 \item Repeat 5. for pending medium-priority jobs.
 \item Repeat 5. for pending low-priority jobs.
