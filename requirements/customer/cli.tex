@@ -1,0 +1,114 @@
+\newcommand{\jacommand}[3]{
+\textsc{\LARGE{\textbf{#1}}}
+\begin{itemize}
+\item \textbf{Options:} #2
+\item \textbf{Effect:} #3
+\end{itemize}
+}
+\newcommand{\jaoptionheader}{\textsc{\textbf{Option descriptions:}}\newline\newline}
+\newcommand{\jaoption}[3]{
+\textbf{#1}
+\begin{itemize}
+\item \textbf{Short form:} #2
+\item \textbf{Effect:} #3
+\end{itemize}
+}
+\subsection{Command Line Interface}
+All components of JobAdder are accessible through a command line interface (CLI).
+The command line interface on a machine with JobAdder installed has the following structure:
+\begin{equation}
+\text{<component name> <command> <options> <targets>},
+\end{equation}
+where the \textit{component name} can be any one of the following:
+\begin{itemize}
+\item \textbf{jobadder} to access the \textit{user client}.
+\item \textbf{jobcenter} to access the \textit{server}.
+\item \textbf{jobworker} to access the \textit{worker client}.
+\end{itemize}
+Commands, options, and valid targets are and options are specified in the following sections.
+
+Options can be added in the following ways:
+\begin{itemize}
+\item By supplying their names like "-{}-option\_x -{}-option\_y=2 -{}-option\_z".
+\item By supplying their abbreviations like "-x -y 2 -z".
+\item By supplying their abbreviations like "-xz -y 2".
+\end{itemize}
+
+The available \textit{commands} are generally specific to the used component.
+Likewise, the available \textit{options} and \textit{targets} are generally specific to the commands of a used component.
+However, some commands and options are shared between components or commands.
+
+The JobAdder CLI only uses lower-case letters.
+JobAdder CLI options override the values of configuration files.
+If no command is given, the general help text for the given component is printed out.
+\subsubsection{Shared Options}
+\jaoption{config}{c}{Overrides the global configuration file with the given configuration file.}
+\jaoption{help}{h}{
+Prints out a list of the available commands. 
+When used in conjunction with a command:
+prints out more detailed information on the given command and a list of the available options.}
+\jaoption{verbose}{v}{
+Determines the amount of information printed out.
+If set to 2, detailed information is printed out.
+If set to 1, only high-level information is printed out (default).
+If set to 0, no information is printed out.
+Note that this option affects both logs and command line output.
+}
+\subsubsection{User Client}
+\jacommand{add}
+{attach, gpu, mount, name, priority, server, ram, threads}
+{Sends one or more job requests to the server.
+If targets are Docker containers the job consists of simply running the container.
+If targets are configuration files with a specified terminal command the job consists of running the specified terminal command.
+Otherwise targets are interpreted as terminal commands.
+}
+\jaoptionheader
+\jaoption{attach}{a}{
+If set to true, attaches the user client command line to the command line output of the job:
+the command line output of the job is forwarded to the command line of the user client.
+The user client command line will be blocked until the job terminates.
+Incompatible with "block".
+}
+\jaoption{block}{b}{
+The user client command line will be blocked until the job terminates.
+The command line output of the job is \textbf{not} forwarded to the command line of the user client.
+Incompatible with "attach".
+}
+\jaoption{gpu}{g}{
+If set to true, informs the server that the job requires a gpu.
+If set to a string that can be interpreted as VRAM amount, informs the server that a GPU with this amount of VRAM is required for the job.
+If set to a specific GPU model, informs the server that the job must be run on a machine with that GPU built in.
+}
+\jaoption{mount}{m}
+{Directories that need to be mounted onto the Docker container that the job is running in.}
+\jaoption{name}{n}
+{Human-readable name of the job.
+Defaults to user's name + job index}
+\jaoption{priority}{p}
+{Sets the priority of the job: urgent, high, medium, or low.
+Defaults to medium.}
+\jaoption{server}{s}
+{Server to send the job request to.
+Defaults to localhost.}
+\jaoption{ram}{r}
+{If set to a string that can be interpreted as RAM amount, informs the server that this amount of RAM is required for the job.}
+\jaoption{threads}{t}
+{If set to an integer, informs the server that this number of threads is required for the job.}
+\jacommand{query}{user}
+{Prints out information on running/queued/past jobs (specified by target).
+In addition to the one below, options from add command can be used as constraints.}
+\jaoptionheader
+\jaoption{after}{a}{Only return jobs added after the given point in time.}
+\jaoption{before}{b}{Only return jobs added before the given point in time.}
+\jaoption{user}{u}{Filter query by user that added the job.}
+\jacommand{stop}{None}{Stops the job with the specified name.}
+\subsubsection{Server}
+\jacommand{start}{None}{Starts an instance of the JobAdder server.}
+\jacommand{stop}{None}{Stops instances of the JobAdder server.}
+\subsubsection{Worker Client}
+\jacommand{start}{server}{Starts an instance of the JobAdder worker client.}
+\jaoptionheader
+\jaoption{server}{s}
+{Server to receive jobs from.
+Defaults to localhost.}
+\jacommand{stop}{None}{Stops instances of the JobAdder worker client.}
