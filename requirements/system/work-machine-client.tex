@@ -1,22 +1,30 @@
 \section{Work machine client(WMC)}
-\subsection{Main features}
-\begin{enumerate}
-  \item Each work machine shall have a single instance of WMC running.
-  \item On startup, WMC shall connect to the server and report its hardware capabilities. (TODO: define hw capabilities in glossary?)
-  \item WMC must be able to receive commands from the central server.
-  \item WMC shall support the following commands:
+  \subsection{Functional requirements}
+    \subsubsection{Main features}
+    \begin{enumerate}
+      \item[WMCF10] On startup, WMC shall connect to the server and report its hardware capabilities.
+      \item[WMCF20] WMC must be able to receive commands from the central server.
+      \item[WMCF30] Each work machine must have a single instance of WMC running.
+      \item[WMCF40] WMC shall support the following commands:
+      \begin{enumerate}
+        \item[WMCF41] Start/Resume execution of a job.
+        \item[WMCF42] Pause execution of a job.
+        \item[WMCF43] Remove a job from the list of running jobs on the current machine.
+        \item[WMCF44] Query the current state of the work machine: running jobs, load on hardware.
+        \item[WMCF45] Terminate this instance of the WMC.
+      \end{enumerate}
+      \item[WMCF50] WMC shall download the job data to the local storage if needed. (TODO: need to decide when)
+      \item[WMCF60] WMC shall notify the server whenever a job is completed.
+    \end{enumerate}
+
+    \subsubsection{Optional features}
+      \begin{enumerate}
+        \item[WMCFO10] WMC shall notify the server periodically on the progress of the job.
+        \item[WMCFO20] WMC shall decide what kind of local storage to use for each job. (RAM, SSD or HDD).
+        \item[WMCFO30] WMC shall estimate the time of arrival of a job.
+      \end{enumerate}
+
+  \subsection{Product Data}
   \begin{enumerate}
-    \item Start/Resume execution of a job.
-    \item Pause execution of a job.
-    \item Remove a job from the list of running jobs on the current machine.
-    \item Query the current state of the work machine: running jobs, load on hardware.
-    \item Terminate this instance of WMC.
-  \end{enumerate}
-  \item WMC shall download the job data to the local storage if needed. (TODO: need to decide when)
-  \item WMC shall notify the server whenever a job is completed.
-\end{enumerate}
-\subsection{Optional features}
-  \begin{enumerate}
-    \item WMC shall notify the server periodically on the progress of the job.
-    \item WMC shall decide what kind of local storage to use for each job. (RAM, SSD or HDD).
-  \end{enumerate}
+    \item[WMCPD10] Docker containers for all the jobs running on this machine.
+    \item[WMCPD20] Results of the jobs running on this machine.
