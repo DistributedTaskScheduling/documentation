@@ -1,0 +1,37 @@
+\section{Purpose}
+  \subsection{Product Goal}
+    JobAdder aims to facilitate and accelerate the execution of computationally
+    expensive jobs in a cluster of work machines.
+
+    Currently, users need to access every single work machine manually in order to
+    distribute their jobs over them. Even more problems arise when a group of users
+    is involved. In that case, users have to look for the work machine with the
+    least amount of work and add their job to it.
+
+    JobAdder addresses and solves these problems. With JobAdder, users are able to
+    send their jobs to a central server in order to evenly distribute them over
+    suitable work machines without having to look for them manually. So if there is
+    enough workload (which is usually the case), no machine remains idle unless it
+    is forced to.
+
+    Jobadder also aims to make task scheduling more user-friendly. A user does not
+    have to keep checking the state of their job, they will be notified once the job
+    is done. Nor does a user have to wait for an idle machine in order to queue a
+    job, the central server saves them up and runs them once it is possible. There
+    is also more insight into the whole system by providing statistics about user
+    activity, currently running jobs, past jobs and queued jobs.
+
+    Users can set priorities for their jobs so that jobs with high priority will be
+    executed before jobs with low priority. Urgent jobs are immediately executed by
+    pausing jobs with the lowest priority, so a user is not required to pause or
+    cancel low-priority jobs manually. The scheduling algorithm also guarantees that
+    every job is eventually run by automatically increasing its priority over time.
+
+  \subsection{Target Audience}
+    The target audience mostly consists of groups of users with access to several
+    work machines. This includes companies, academic institutions and computing
+    centers. These users usually need remote machines to run their jobs due to high
+    hardware requirements.
+
+    JobAdder helps them use their hardware more efficiently by adding an abstraction
+    layer between the user and the work machines that are running the user's jobs.
