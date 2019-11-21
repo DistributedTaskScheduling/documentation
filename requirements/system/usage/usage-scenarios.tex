@@ -1,26 +1,26 @@
 \subsubsection{Usage scenarios}
 \begin{enumerate}
-  \item High priority task.
+  \item High priority job.
   \begin{itemize}
     \item Bob has to do some urgent work.
-    \item Bob inputs the task and data. He also sets the priority option to high.
-    \item System checks if the task can be directly executed somewhere.
-    If that is the case, the task is executed and the scenario ends.
-    \item System checks if enough resources can be freed for Bob's task by pausing one or more appropriate running tasks.
-    \item System ensures that the paused tasks will be continued once enough resources are available.
-    \item If there are no appropriate tasks to pause, the user is notified that he has to wait.
+    \item Bob inputs the job and data. He also sets the priority option to high.
+    \item System checks if the job can be directly executed somewhere.
+    If that is the case, the job is executed and the scenario ends.
+    \item System checks if enough resources can be freed for Bob's job by pausing one or more appropriate running jobs.
+    \item System ensures that the paused jobs will be continued once enough resources are available.
+    \item If there are no appropriate jobs to pause, the user is notified that he has to wait and the job is added to a waiting queue
   \end{itemize}
-  \item User checks the state of the task.
+  \item User checks the state of the job.
   \begin{itemize}
-    \item Bob schedules a task that he has not thoroughly tested.
-    Bob is concerned that the task will not work as intended.
-    \item System has available resources, so it starts the task.
-    \item After 15 minutes Bob wants to check if the task is working as intended.
-    \item System enables Bob to inspect the running task.
-    \item Bob finds that the task is not outputting the correct results.
-    \item Bob stops the task.
-    \item System removes the running instance of the task.
-    \item Bob fixes the bug in the task and starts it again.
+    \item Bob schedules a job that he has not thoroughly tested.
+    Bob is concerned that the job will not work as intended.
+    \item System has available resources, so it starts the job.
+    \item After 15 minutes Bob wants to check if the job is working as intended.
+    \item System enables Bob to inspect the running job.
+    \item Bob finds that the job is not outputting the correct results.
+    \item Bob stops the job.
+    \item System removes the running instance of the job.
+    \item Bob fixes the bug in the job and starts it again.
     This time everything runs fine and Bob is satisfied with the end result.
   \end{itemize}
 \end{enumerate}
