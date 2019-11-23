@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper,10pt]{scrreprt}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[nonumberlist,nopostdot]{glossaries-extra}     % provides glossary commands
@@ -15,6 +15,8 @@
 \begin{document}
 
 \maketitle
+\tableofcontents
+\newpage
 
 \input{customer/introduction}
 \input{customer/goals}
@@ -24,5 +26,6 @@
 \input{customer/cli}
 \input{system/main}
 
+\newpage
 \printunsrtglossaries
 \end{document}

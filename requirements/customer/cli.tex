@@ -13,7 +13,7 @@
 \item \textbf{Effect:} #3
 \end{itemize}
 }
-\section{Command Line Interface}
+\chapter{Command Line Interface}
 All components of JobAdder are accessible through a command line interface (CLI).
 The command line interface on a machine with JobAdder installed has the following structure:
 \begin{equation}
@@ -41,7 +41,7 @@ However, some commands and options are shared between components or commands.
 The JobAdder CLI only uses lower-case letters.
 JobAdder CLI options override the values of configuration files.
 If no command is given, the general help text for the given component is printed out.
-\subsubsection{Shared Options}
+\section{Shared Options}
 \jaoption{config}{c}{Overrides the global configuration file with the given configuration file.}
 \jaoption{help}{h}{
 Prints out a list of the available commands. 
@@ -54,7 +54,7 @@ If set to 1, only high-level information is printed out (default).
 If set to 0, no information is printed out.
 Note that this option affects both logs and command line output.
 }
-\subsubsection{User Client}
+\section{User Client}
 \jacommand{add}
 {attach, gpu, mount, name, priority, server, ram, threads}
 {Sends one or more job requests to the server.
@@ -102,10 +102,10 @@ In addition to the one below, options from add command can be used as constraint
 \jaoption{before}{b}{Only return jobs added before the given point in time.}
 \jaoption{user}{u}{Filter query by user that added the job.}
 \jacommand{stop}{None}{Stops the job with the specified name.}
-\subsubsection{Server}
+\section{Server}
 \jacommand{start}{None}{Starts an instance of the JobAdder server.}
 \jacommand{stop}{None}{Stops instances of the JobAdder server.}
-\subsubsection{Worker Client}
+\section{Worker Client}
 \jacommand{start}{server}{Starts an instance of the JobAdder worker client.}
 \jaoptionheader
 \jaoption{server}{s}
