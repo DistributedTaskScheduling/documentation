@@ -4,6 +4,7 @@
 \usepackage[nonumberlist,nopostdot]{glossaries-extra}     % provides glossary commands
 \usepackage{graphicx}       % provides commands for including figures
 \usepackage{amsmath}
+\usepackage{float}
 
 % Glossary needs to be before \begin{document}
 \input{customer/glossary}
@@ -27,5 +28,8 @@
 \input{system/main}
 
 \newpage
+\input{system/systemmodel/use-case-diagram}
+\input{system/systemmodel/system-model.tex}
+
 \printunsrtglossaries
 \end{document}
