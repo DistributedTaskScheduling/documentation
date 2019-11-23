@@ -64,3 +64,28 @@ Given the effective priorities for each job the scheduling algorithm then perfor
   However, this behavior changes once the effective priority $p$ of a non-urgent job reaches a certain threshold:
   once the threshold is reached the scheduling algorithm will begin to pause non-urgent running jobs with lower effective priority $p$ if possible and necessary to run the job with an effective priority $p$ above the threshold.
 \end{enumerate}
+To illustrate how the scheduling algorithm would work in practice consider the following example:
+\begin{enumerate}
+  \item Assume a server with just one work machine and 4 threads.
+  The work machine is idle.
+  \item A user schedules job A which has medium priority and needs 4 threads.
+  The server assigns job A to the work machine since it is currently idle.
+  \item A user schedules job B which has low priority and needs 1 thread.
+  Job B has to wait since there are currently no resources to run it.
+  \item A user schedules job C which has urgent priority and needs 1 thread.
+  The server pauses job A in order to run job C.
+  Because there are now three unused threads the server assigns job B to the work machine.
+  \item Job C finishes running.
+  Because the priority of the currently paused job A (medium) is higher than that of job B (low) the server pauses job B in order to resume job A.
+  \item A user schedules job D which has high priority and needs 4 threads.
+  Because the priority of job D is not urgent, no jobs of lower priority are paused in order to run it.
+  Job D therefore has to wait.
+  \item Job A finishes running.
+  The server resumes the currently paused job B.
+  Job B (low priority) is preferred over job D (high priority) because job B is currently paused instead of pending.
+  \item The effective priority of job D eventually reaches the threshold for preemption.
+  The server pauses job B in order to run job D.
+  \item Job D finishes running.
+  The server resumes job B.
+  \item Job B finishes running.
+\end{enumerate}
