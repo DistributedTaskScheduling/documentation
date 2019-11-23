@@ -5,3 +5,5 @@
 *.glo
 *.ist
 *.log
+*.toc
+*.out
