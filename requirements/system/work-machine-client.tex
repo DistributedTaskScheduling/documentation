@@ -1,6 +1,6 @@
-\section{Worker client(WC)}
-  \subsection{Functional requirements}
-    \subsubsection{Main features}
+\chapter{Worker client(WC)}
+  \section{Functional requirements}
+    \subsection{Main features}
     \begin{enumerate}
       \item[WCF10] On startup, WC shall connect to the server and report its hardware capabilities.
       \item[WCF20] WC must be able to receive commands from the central server.
@@ -17,14 +17,14 @@
       \item[WCF60] WC shall notify the server whenever a job is completed.
     \end{enumerate}
 
-    \subsubsection{Optional features}
+    \subsection{Optional features}
       \begin{enumerate}
         \item[WCFO10] WC shall notify the server periodically on the progress of the job.
         \item[WCFO20] WC shall decide what kind of local storage to use for each job. (RAM, SSD or HDD).
         \item[WCFO30] WC shall estimate the time of arrival of a job.
       \end{enumerate}
 
-  \subsection{Product Data}
+  \section{Product Data}
   \begin{enumerate}
     \item[WCP10] Docker containers for all the jobs running on this machine.
     \item[WCP20] Results of the jobs running on this machine.
