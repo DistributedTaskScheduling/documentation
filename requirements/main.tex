@@ -14,15 +14,40 @@
 
 \begin{document}
 
+% Macro for table of contents from sections instead of chapters
+% Taken from https://tex.stackexchange.com/questions/246354/change-toc-to-section-instead-of-chapter
+\makeatletter
+\renewcommand\tableofcontents{%
+    \if@twocolumn
+      \@restonecoltrue\onecolumn
+    \else
+      \@restonecolfalse
+    \fi
+    \section*{\contentsname
+        \@mkboth{%
+           \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+    \@starttoc{toc}%
+    \if@restonecol\twocolumn\fi
+    }
+\makeatother
+
 \maketitle
+\tableofcontents
+\newpage
 
 \input{customer/introduction}
 \input{customer/goals}
+\newpage
 \input{customer/main}
+\newpage
 \input{customer/product-environment}
+\newpage
 \input{customer/scheduling-algorithm}
+\newpage
 \input{customer/cli}
+\newpage
 \input{system/main}
 
+\newpage
 \printunsrtglossaries
 \end{document}
