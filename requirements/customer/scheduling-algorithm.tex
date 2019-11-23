@@ -15,7 +15,7 @@ The scheduling algorithm operates under the following conditions:
   \item Jobs cannot be transferred from one work machine to another.
   \item Jobs cannot be restarted once they have been canceled.
   \item Job preemption is limited: if a job is paused it has to be kept either in physical memory or virtual memory (swap file).
-  \item Some jobs cannot be paused due to software licensing restrictions.
+  \item Some jobs cannot be paused (for example due to software licensing restrictions).
 \end{itemize}
 The scheduling algorithm takes the following parameters as input:
 \begin{itemize}
@@ -51,7 +51,8 @@ Given the effective priorities for each job the scheduling algorithm then perfor
 \begin{enumerate}
   \item If there are pending urgent jobs:
   Assign urgent jobs to work machines until urgent jobs or resources run out.
-  Jobs are added in the order of their effective priority $p$ (oldest to newest).
+  Jobs are added in the order of their effective priority $p$.
+  Because all urgent jobs have the same user-set priority $p_0$ they are simply added from oldest to newest.
   Non-urgent running jobs will be paused if possible and necessary to run more urgent jobs.
   \item If there are paused non-urgent jobs:
   Resume non-urgent jobs until paused non-urgent jobs or resources run out.
@@ -63,6 +64,7 @@ Given the effective priorities for each job the scheduling algorithm then perfor
   By default, the scheduling algorithm will \textbf{not} pause running jobs to free up resources to run non-urgent jobs.
   However, this behavior changes once the effective priority $p$ of a non-urgent job reaches a certain threshold:
   once the threshold is reached the scheduling algorithm will begin to pause non-urgent running jobs with lower effective priority $p$ if possible and necessary to run the job with an effective priority $p$ above the threshold.
+  This change in behavior aims to prevent starvation (see scheduling algorithm goals).
 \end{enumerate}
 To illustrate how the scheduling algorithm would work in practice consider the following example:
 \begin{enumerate}
