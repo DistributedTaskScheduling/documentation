@@ -1,0 +1,196 @@
+\section{Functional Requirements}
+\begin{itemize}
+  \item [UCF01] Queueing new jobs
+  \item [UCF02] Querying the state of jobs
+  \item [UCF03] Canceling jobs
+  \item [UCF04] Setting job priorities
+  \item [UCF05] Checking the specifications of available containers
+  \item [UCF06] Choosing the parameters of the container(preferred OS/environment)
+  \item [UCF07] Choosing the running mode: "blocking mode"/ default mode
+  \item [UCF08] Choosing the minimal hardware requirements for a job
+  \item [UCF09] Checking the state of the entire server
+\end{itemize}
+
+\section{Optional Requirements}
+\begin{itemize}
+  \item [UCOR01] Saving a private image for future usage
+  \item [UCOR02] Scheduling a job to run at a specific time
+  \item [UCOR03] Checking the estimated waiting time
+  \item [UCOR04] Checking the estimated time of arrival
+\end{itemize}
+
+\section{Requirement Details}
+\begin{itemize}
+  \item UCFR01 Queueing new jobs
+    \begin{itemize}
+      \item Goal: Allow User to queue jobs.
+      \item Importance: Primary
+      \item Precondition: User is logged into a user account.
+      \item Post condition (success): The job is queued.
+      \item Post condition (fail):
+        \begin{itemize}
+          \item The job is not queued.
+          \item An appropriate error message is displayed.
+        \end{itemize}
+      \item Triggering Event: The User requests to add a job to the queue.
+      \item Description:
+        \begin{itemize}
+          \item  The user can add a job by calling the "add" command of the CLI of the user client.
+        \end{itemize}
+    \end{itemize}
+
+  \item UCFR02 Querying the state of jobs
+    \begin{itemize}
+      \item Goal: Allow User to check the state of a job.
+      \item Importance: Primary
+      \item Precondition: At least one job must be in the central server's job database.
+      \item Post condition (success): A message with the state of the jobs will be displayed.
+      \item Post condition (fail):
+        \begin{itemize}
+          \item The central server can't find the specified job.
+          \item An appropriate error message is displayed.
+        \end{itemize}
+      \item Triggering Event: The user queries the state of a job with a given job name.
+      \item Description:
+        \begin{itemize}
+          \item The user can check the state of a job by calling the "query" command of the CLI of the user client.
+        \end{itemize}
+    \end{itemize}
+
+  \item UCFR03 Canceling jobs
+    \begin{itemize}
+      \item Goal: Allow User to cancel a running Job.
+      \item Importance: Primary
+      \item Precondition: The job must be running or in the queue.
+      \item Post condition (success):
+        \begin{itemize}
+          \item The job is removed from the queue or from the working machine and its resources are released.
+          \item An appropriate success message is displayed.
+        \end{itemize}
+      \item Post condition (fail):
+        \begin{itemize}
+          \item The job is still running or in the queue.
+          \item An appropriate error message is displayed.
+        \end{itemize}
+      \item Triggering Event: The user cancels a running job or a queued job.
+      \item Description:
+        \begin{itemize}
+          \item   The user can cancel a job by calling the "stop" command of the CLI of the user client.
+        \end{itemize}
+    \end{itemize}
+
+  \item UCFR04 Setting job priorities
+    \begin{itemize}
+      \item Goal: User sets the priority of a specific job.
+      \item Importance: Primary
+      \item Precondition: User must be logged in.
+      \item Post condition (success):
+        \begin{itemize}
+          \item Job priority changes.
+          \item An appropriate success message is displayed.
+        \end{itemize}
+      \item Post condition (fail):
+        \begin{itemize}
+          \item Invalid priority.
+          \item An appropriate error message is displayed.
+        \end{itemize}
+      \item Triggering Event: The user sets the priority of a job.
+      \item Description:
+        \begin{itemize}
+          \item The user adds the priority of the job while adding it to the queue with the "add command".
+          \item The user changes the priority of a job after it already start running with the "set" command.
+        \end{itemize}
+    \end{itemize}
+
+
+  \item UCFR05 Checking the specifications of available containers
+    \begin{itemize}
+      \item Goal: User receives a description of the available containers.
+      \item Importance: Primary
+      \item Precondition: User must be logged in.
+      \item Post condition (success): A description of the available containers is displayed.
+      \item Post condition (fail):
+        \begin{itemize}
+          \item Networking error.
+          \item An appropriate error message is displayed.
+        \end{itemize}
+      \item Triggering Event: The user requests containers specifications.
+      \item Description:
+        \begin{itemize}
+          \item The user requests containers specifications with the "query" command.
+        \end{itemize}
+    \end{itemize}
+
+  \item  UCFR06 Choosing the parameters of the container(e.g. base image)
+    \begin{itemize}
+      \item Goal: User chooses preferred container parameters for a specific job.
+      \item Importance: Primary
+      \item Precondition: User must be logged in.
+      \item Post condition (success): An appropriate success message is displayed.
+      \item Post condition (fail):
+        \begin{itemize}
+          \item unavailable specifications.
+          \item An appropriate error message is displayed.
+        \end{itemize}
+      \item The user chooses container parameters.
+      \item Description:
+        \begin{itemize}
+          \item The user sets container parameters when calling the "add" command of the CLI of the user client.
+        \end{itemize}
+    \end{itemize}
+
+  \item  UCFR07 Choosing the running mode
+    \begin{itemize}
+      \item Goal: User chooses preferred mode for the application to use (regular or blocking).
+      \item Importance: Primary
+      \item Precondition: User must be logged in.
+      \item Post condition (success): An appropriate success message is displayed.
+      \item Post condition (fail):
+        \begin{itemize}
+          \item unavailable mode.
+          \item An appropriate error message is displayed.
+        \end{itemize}
+      \item Triggering Event: The user chooses a specific mode.
+      \item Description:
+        \begin{itemize}
+          \item When the user chooses regular mode the user client will instantly return to the regular command line.
+          \item When the user chooses blocking mode the user client will only return to the command line once the job has finished running.
+        \end{itemize}
+    \end{itemize}
+
+  \item  UCFR08 Choosing the minimal hardware requirements for a job
+    \begin{itemize}
+      \item Goal: User chooses the minimal hardware required for the job to run.
+      \item Importance: Primary
+      \item Precondition: User must be logged in.
+      \item Post condition (success): An appropriate success message is displayed.
+      \item Post condition (fail):
+        \begin{itemize}
+          \item unavailable requirements.
+          \item An appropriate error message is displayed.
+        \end{itemize}
+      \item Triggering Event: The user chooses the minimal hardware requirements for the job.
+      \item Description:
+        \begin{itemize}
+          \item The user sets the minimum hardware requirements when calling the "add" command of the CLI of the user client.
+        \end{itemize}
+    \end{itemize}
+
+  \item  UCFR09 Checking the state of the central server
+    \begin{itemize}
+      \item Goal: User requests a server state check.
+      \item Importance: Primary
+      \item Precondition: User must be logged in.
+      \item Post condition (success): A description of the state of the server is displayed.
+      \item Post condition (fail):
+        \begin{itemize}
+          \item Networking error.
+          \item An appropriate error message is displayed.
+        \end{itemize}
+      \item Triggering Event: The user requests a server state check.
+      \item Description:
+        \begin{itemize}
+          \item The user requests a server state check with the "query" command.
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
