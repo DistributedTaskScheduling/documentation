@@ -1,0 +1,48 @@
+\section{Functional Requirements}
+\begin{itemize}
+  \item[UCF10] The user client shall implement a command line interface as specified in chapter \hyperref[CLI]{CLI}.
+  \item[UCF20] In order to carry out a request, the user client shall authenticate the user with the central server as follows:
+    \begin{enumerate}
+      \item[UCF21] Establish a \gls{SSH} connection to the server using the user's credentials.
+        Credentials are either stored in a local file, environment variable or are entered manually by the user.
+      \item[UCF22] Once the user is authenticated, the actual request is sent to the server using the utility program described in CSF40.
+    \end{enumerate}
+
+  \item[UCF30] User client shall enable the user to submit new jobs to the central server using the `add` command.
+    In case the authentication fails, the job shall not be queued and an error message shall be displayed.
+    Otherwise, the new job shall be queued in the central server with all options set to the values specified from the user.
+    After that, the user client shall exit, except if blocking mode is requested or if the user attaches his terminal to the job.
+
+  \item[UCF40] User client shall enable the user to query the state of a job by the job's ID.
+    In case the authentication fails, or the job is not found in the server database, an appropriate error message shall be displayed.
+    Otherwise, the job's status shall be printed to the command line.
+
+  \item[UCF50] User client shall enable the user to terminate jobs.
+    In case the authentication fails, or the user does not have sufficient privileges to terminate the job,
+    the job continues running, and an appropriate error message is displayed.
+    Otherwise, the termination request shall be submitted to the central server.
+
+  \item[UCF60] User client shall support adding a job in blocking mode.
+    In blocking mode, instead of returning immediately after the job is scheduled, the user client shall remain running
+    and shall print the stdout and stderr of the running job, as well as status messages whenever the job is started or paused.
+
+  \item[UCF70] User client shall support querying the status of jobs of a given user.
+    For each selected job, a line will be printed containing the following information:
+    \begin{itemize}
+      \item Job ID.
+      \item Job submission time.
+      \item Job status.
+      \item Time of last status update.
+      \item Total running time up to now.
+      \item Work machine the job is scheduled on(if known).
+    \end{itemize}
+\end{itemize}
+
+\section{Optional Requirements}
+\begin{itemize}
+  \item [UCO10] Users can save a docker container for future use.
+  \item [UCO20] The user client shall implement an option to schedule a job at a specific time point in the future.
+  \item [UCO30] The user client shall report the number of jobs at the queue when queueing a job, as well as a rough estimate for waiting time.
+\end{itemize}
+
+
