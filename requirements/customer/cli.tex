@@ -56,7 +56,7 @@ Note that this option affects both logs and command line output.
 }
 \section{User Client}
 \jacommand{add}
-{attach, gpu, mount, name, priority, server, ram, threads, image}
+{attach, gpu, image, mount, name, priority, server, ram, threads}
 {Sends one or more job requests to the server.
 If targets are Docker containers the job consists of simply running the container.
 If targets are configuration files with a specified terminal command the job consists of running the specified terminal command.
@@ -79,6 +79,9 @@ If set to true, informs the server that the job requires a gpu.
 If set to a string that can be interpreted as VRAM amount, informs the server that a GPU with this amount of VRAM is required for the job.
 If set to a specific GPU model, informs the server that the job must be run on a machine with that GPU built in.
 }
+\jaoption{image}{i}
+{If set to a valid docker image name, and the target is a terminal command, this indicates the docker container to run the container in.
+No-op otherwise.}
 \jaoption{mount}{m}
 {Directories that need to be mounted onto the Docker container that the job is running in.}
 \jaoption{name}{n}
@@ -94,9 +97,6 @@ Defaults to localhost.}
 {If set to a string that can be interpreted as RAM amount, informs the server that this amount of RAM is required for the job.}
 \jaoption{threads}{t}
 {If set to an integer, informs the server that this number of threads is required for the job.}
-\jaoption{image}{i}
-{If set to a valid docker image name, and the target is a terminal command, this indicates the docker container to run the container in.
-No-op otherwise.}
 \jacommand{query}{user}
 {Prints out information on running/queued/past jobs (specified by target).
 In addition to the one below, options from add command can be used as constraints.}
