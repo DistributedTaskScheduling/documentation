@@ -1,22 +1,34 @@
-\chapter{Customer requirements}
-\section{General}
+\chapter{Product requirements}
+\section{Customer stipulated functionality}
 \begin{enumerate}
- \item JA must provide a central server that assigns user jobs to work machines.
- \item JA must provide a user client (UC) that transmits a user's job request to the central server.
- \item JA must provide a work machine client (WMC) that receives jobs from the central server and runs them on a work machine.
- \item All components of JA must work under the following Linux distributions: Ubuntu 18.04, CentOS 7.
- \item Users must be notified when one of their jobs terminates.
+  \item JA shall provide a user client which makes it easy for users to schedule new jobs.
+  \item For each job, the user shall be able to set the following attributes via the user client:
+    \begin{itemize}
+      \item Target OS.
+      \item Minimum amount of RAM.
+      \item Minimum number of CPU threads.
+      \item Job priority.
+    \end{itemize}
+  \item Users shall be able to receive notifications when their job is completed.
+  \item JA must provide a central server that assigns user jobs to work machines.
+  \item The central server shall store information about all jobs in a persistent database.
+  \item The central server shall provide a network API to get statistics about CPU load, number of queued/running jobs, etc.
+  \item JA must provide a worker client that receives jobs from the central server and runs them on a work machine.
+  \item All components of JA must work under the following Linux distributions: Ubuntu 18.04, CentOS 7.
 \end{enumerate}
-\subsection{Technical requirements}
+\section{Technical requirements}
 \begin{enumerate}
- \item JA must follow an object-oriented design.
- \item JA must be implemented in Python 3.
- \item All JA references and methods must have consistent Python type hints.
+  \item JA must follow an object-oriented design.
+  \item JA must be implemented in Python 3.
+  \item All JA references and methods must have consistent Python type hints.
 \end{enumerate}
-\section{Optional}
+\section{Developed contributions}
 \begin{enumerate}
- \item Blocking mode: wait for the job to finish before client returns.
- \item Path translation: handle different mount point locations.
- \item Attach to stdout of running job or read log output (something like "tail -f").
- \item Estimate ETA for running jobs.
+  \item Job preemption: if higher priority jobs are scheduled, the existing jobs may be preempted to run the high priority jobs.
+  \item Blocking mode: wait for the job to finish before client returns.
+  \item Path translation: handle different mount point locations.
+  \item Attach to stdout of running job or read log output (something like "tail -f").
+  \item Specify custom docker containers to execute.
+  \item Configuration files for reusing configuration of jobs which are run often with the same parameters.
+  \item SSH access to a running job.
 \end{enumerate}
