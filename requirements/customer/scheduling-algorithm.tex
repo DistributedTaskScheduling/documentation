@@ -91,3 +91,37 @@ To illustrate how the scheduling algorithm would work in practice consider the f
   The server resumes job B.
   \item Job B finishes running.
 \end{enumerate}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{./customer/diagrams/png/main-idea.png}
+  \caption{This diagram depicts one iteration of the scheduling algorithm.
+    The effective priorities of jobs are reevaluated when the set of runnable jobs changes or after a periodic time interval.
+    The scheduling algorithm then attempts to assign jobs to work machines.
+    First it tries to assign all pending urgent jobs, followed by all paused non-urgent jobs, and lastly all pending non-urgent jobs.
+    Inside the aforementioned three steps the scheduling algorithm processes jobs in descending order of their effective priority (high priority first).
+    Diagrams for how the scheduling algorithm decides if a single job can be assigned/resumed are shown in graphics: \hyperref[urgent]{Figure 2} \hyperref[paused]{Figure 3} \hyperref[non-urgent]{Figure 4}}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{./customer/diagrams/png/urgent-job.png}
+  \caption{This diagram depicts how the algorithm processes an urgent job.
+  Non-urgent jobs will be paused to free up resources for the urgent job (if possible).}
+  \label{urgent}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{./customer/diagrams/png/paused-job.png}
+  \caption{This diagram depicts how the algorithm processes a paused non-urgent job.
+  Non-urgent jobs will be paused to free up resources for the paused job (if possible).}
+  \label{paused}
+\end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{./customer/diagrams/png/non-urgent-job.png}
+  \caption{This diagram depicts how the algorithm processes a pending non-urgent job.
+  By default the algorithm will not pause running jobs to free up resources to run non-urgent jobs.
+  But if the effective priority of the job reaches a threshold, the non-urgent job will follow the same steps as a urgent job.}
+  \label{non-urgent}
+\end{figure}
+
