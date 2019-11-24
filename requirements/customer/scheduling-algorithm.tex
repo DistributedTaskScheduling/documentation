@@ -47,17 +47,19 @@ The effective priority $p_0$ can then be calculated as follows:
 \begin{equation}
 p = p_0 + C \cdot (t - t_0).
 \end{equation}
-Given the effective priorities for each job the scheduling algorithm then performs the following steps:
+Given the effective priorities for each job the scheduling algorithm then performs the following steps (compare figure \ref{high-level}):
 \begin{enumerate}
   \item If there are pending urgent jobs:
   Assign urgent jobs to work machines until urgent jobs or resources run out.
   Jobs are added in the order of their effective priority $p$.
   Because all urgent jobs have the same user-set priority $p_0$ they are simply added from oldest to newest.
   Non-urgent running jobs will be paused if possible and necessary to run more urgent jobs.
+  Compare figure \ref{urgent}.
   \item If there are paused non-urgent jobs:
   Resume non-urgent jobs until paused non-urgent jobs or resources run out.
   Jobs are resumed in the order of their effective priority $p$.
   Running jobs with equal or lower effective priority $p$ will be paused if possible and necessary to run jobs with higher effective priority $p$.
+  Compare figure \ref{paused}.
   \item If there are pending non-urgent jobs:
   Assign pending non-urgent jobs to work machines until pending non-urgent jobs or resources run out.
   Jobs are assigned to work machines in the order of their effective priority $p$.
@@ -65,6 +67,7 @@ Given the effective priorities for each job the scheduling algorithm then perfor
   However, this behavior changes once the effective priority $p$ of a non-urgent job reaches a certain threshold:
   once the threshold is reached the scheduling algorithm will begin to pause non-urgent running jobs with lower effective priority $p$ if possible and necessary to run the job with an effective priority $p$ above the threshold.
   This change in behavior aims to prevent starvation (see scheduling algorithm goals).
+  Compare figure \ref{non-urgent}.
 \end{enumerate}
 To illustrate how the scheduling algorithm would work in practice consider the following example:
 \begin{enumerate}
@@ -100,7 +103,8 @@ To illustrate how the scheduling algorithm would work in practice consider the f
     The scheduling algorithm then attempts to assign jobs to work machines.
     First it tries to assign all pending urgent jobs, followed by all paused non-urgent jobs, and lastly all pending non-urgent jobs.
     Inside the aforementioned three steps the scheduling algorithm processes jobs in descending order of their effective priority (high priority first).
-    Diagrams for how the scheduling algorithm decides if a single job can be assigned/resumed are shown in graphics: \hyperref[urgent]{Figure 2} \hyperref[paused]{Figure 3} \hyperref[non-urgent]{Figure 4}}
+    Diagrams for how the scheduling algorithm decides if a single job can be assigned/resumed are shown in graphics \ref{urgent}, \ref{paused}, and \ref{non-urgent}}.
+  \label{high-level}
 \end{figure}
 \begin{figure}
   \centering
