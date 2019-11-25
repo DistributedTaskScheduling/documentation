@@ -1,5 +1,6 @@
-\chapter{Product requirements}
-\section{Customer stipulated functionality}
+\chapter{Product Requirements}
+This chapter describes general requirements for JobAdder: what the customer explicitly asked for and what we decided would be good additions.
+\section{Customer Stipulated Functionality}
 \begin{enumerate}
   \item JA shall provide a user client which makes it easy for users to schedule new jobs.
   \item For each job, the user shall be able to set the following attributes via the user client:
@@ -16,13 +17,13 @@
   \item JA must provide a worker client that receives jobs from the central server and runs them on a work machine.
   \item All components of JA must work under the following Linux distributions: Ubuntu 18.04, CentOS 7.
 \end{enumerate}
-\section{Technical requirements}
+\section{Technical Requirements}
 \begin{enumerate}
   \item JA must follow an object-oriented design.
   \item JA must be implemented in Python 3.
   \item All JA references and methods must have consistent Python type hints.
 \end{enumerate}
-\section{Developed contributions}
+\section{Developed Contributions}
 \begin{enumerate}
   \item Job preemption: if higher priority jobs are scheduled, the existing jobs may be preempted to run the high priority jobs.
   \item Blocking mode: wait for the job to finish before client returns.
