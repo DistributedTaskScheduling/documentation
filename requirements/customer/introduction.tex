@@ -3,3 +3,17 @@ The JobAdder project enables users to remotely execute resource-intensive tasks 
 Tasks are being distributed to work machines automatically.
 The distribution reduces task execution times and peak system loads by better utilizing the available hardware.
 In addition, JobAdder provides tools to inspect the state of the whole system and display statistics about user activity.
+
+This document details the requirements for the planned implementation of JobAdder.
+Because JobAdder is going to be deployed on distributed systems, this document details not only externally visible properties but also coarse design decisions.
+Most notably, JobAdder will consist of three components: a user client, a central server, and a worker client.
+
+Chapter 2 of this document describes the purpose of the project: what it does and who it is for.
+Chapter 3 describes general requirements for JobAdder: what the customer explicitly asked for and what we decided would be good additions.
+Chapter 4 describes the hardware and software that will presumably be necessary to run the respective components of JobAdder.
+Chapter 5 describes in detail how our proposed scheduling algorithm will work.
+Chapter 6 gives a detailed description of our envisioned command line interface.
+Chapter 7 lists detailed requirements for the central server.
+Chapter 8 lists detailed requirements for the user client.
+Chapter 9 lists detailed requirements for the worker client.
+Chapter 10 details use cases and usage scenarios for JobAdder.
