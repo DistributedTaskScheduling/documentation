@@ -1,6 +1,6 @@
-# UML Modeling Tool
-Everyone must use the same UML modeling tool because they are usually not compatible with one another.
-As of yet, we did not decide on a specific UML Modeling Tool to use.
+# UML Tool
+Everyone must use the same UML tool because they are usually not compatible with one another.
+As of yet, we did not decide on a specific UML tool to use.
 
 Must-have features:
 
