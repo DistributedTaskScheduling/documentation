@@ -9,7 +9,11 @@ Package for classes used exclusively on the central server.
 ## Class: JobCenter
 Main class for the central server.
 ### Class: CentralServerCLIHandler
+Sub-class of CLIHandler.
 Processes CLI commands for the central server.
+### Class: CentralServerConfig
+Sub-class of Config.
+Handles hierarchical configuration files for the central server.
 ### Class: Database
 Wrapper around some database Python package that gives a clean interface.
 ### Class: Dispatcher
@@ -30,6 +34,7 @@ Python file that handles messages from user clients.
 Package for classes used by at least two out of: central server, user client, worker client.
 
 ## Class: CLIHandler
+Sub-class of CLIHandler.
 Abstract base class for handling CLI commands.
 
 ## Class: Config
@@ -48,14 +53,17 @@ Class for transforming objects into YAML documents.
 ### Class: YAMLWriter
 Class for transforming YAML documents into objects.
 
+
 # Package: UserClient
 Package for classes used exclusively on the user client.
 
 ## Class: JobAdder
 Main class for the user client.
 ### Class: UserClientCLIHandler
+Sub-class of CLIHandler.
 Processes CLI commands for the user client.
 ### Class: UserClientConfig
+Sub-class of Config.
 Handles hierarchical configuration files for the user client.
 
 
@@ -69,6 +77,8 @@ Wrapper class for Docker that gives us a clean interface.
 ### Class: Job
 Realization of a user job.
 ### Class: WorkerClientCLIHandler
+Sub-class of CLIHandler.
 Processes CLI commands for the worker client.
 ### Class: WorkerClientConfig
+Sub-class of Config.
 Handles hierarchical configuration files for the worker client.
