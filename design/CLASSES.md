@@ -48,10 +48,6 @@ Abstract base class for objects transferable via SSHConnection
 
 ## Class: SSHConnection
 Class for handling connections between central server, user client, worker client.
-### Class: YAMLReader
-Class for transforming objects into YAML documents.
-### Class: YAMLWriter
-Class for transforming YAML documents into objects.
 
 
 # Package: UserClient
