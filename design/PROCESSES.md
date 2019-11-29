@@ -12,7 +12,6 @@ Everyone must use the same tools for the design phase because they are usually n
 We decided on using PlantUML and Doxygen for the design phase.
 
 ## Workflow
-
 * Write Python class/method stubs with docstrings and type hints.
 * Manually create UML sequence diagrams.
 * Manually create UML class diagrams that show relations between classes for single packages.
