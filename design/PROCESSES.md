@@ -6,6 +6,7 @@ The following chapters/information must be included in the design document (acco
 * Sequence diagrams to illustrate common processes.
 * Changes relative to the requirements document.
 * Large class diagram that shows all classes.
+* When a design pattern is used it must be mentioned.
 
 # Tools
 Everyone must use the same tools for the design phase because they are usually not compatible with one another.
