@@ -1,0 +1,22 @@
+@startuml
+
+participant Proxy
+
+box "Local components"
+    participant Remote
+    participant YAMLReader
+    participant CommandMessage
+    participant ResponseMessage
+end box
+
+Proxy -> Remote : CommandMessage as YAML
+Proxy -> Remote ++ : Execute via shell
+Remote -> YAMLReader ++ : YAML
+YAMLReader -> CommandMessage ** : Create
+Remote <- YAMLReader -- : CommandMessage
+Remote -> Remote : Execute command
+Remote -> ResponseMessage ** : Create
+Proxy <- Remote -- : ResponseMessage as YAML
+destroy CommandMessage
+destroy ResponseMessage
+@enduml
