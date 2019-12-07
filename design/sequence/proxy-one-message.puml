@@ -1,0 +1,24 @@
+@startuml
+
+box "Local components"
+    boundary Boundary
+    participant CommandMessage
+    participant SingleMessageProxy as Proxy
+    participant SSHConnection
+    participant ResponseMessage
+end box
+
+Boundary -> Proxy ++ : CommandMessage
+Proxy -> SSHConnection ** : Create
+Proxy -> SSHConnection ++ : CommandMessage
+SSHConnection -> RemoteComponent ++ : YAML
+RemoteComponent -> RemoteComponent : Execute command
+SSHConnection <- RemoteComponent -- : YAML
+SSHConnection -> ResponseMessage ** : Create
+Proxy <- SSHConnection -- : ResponseMessage
+Proxy -> SSHConnection !!
+Boundary <- Proxy -- : ResponseMessage
+
+destroy ResponseMessage
+
+@enduml
