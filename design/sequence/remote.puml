@@ -9,8 +9,7 @@ box "Local components"
     participant ResponseMessage
 end box
 
-Proxy -> Remote : CommandMessage as YAML
-Proxy -> Remote ++ : Execute via shell
+Proxy -> Remote ++ : Call via shell, YAML as argument
 Remote -> YAMLReader ++ : YAML
 YAMLReader -> CommandMessage ** : Create
 Remote <- YAMLReader -- : CommandMessage
