@@ -14,7 +14,7 @@ end box
 Boundary -> Proxy ++ : CommandMessage
 'Proxy -> SSHConnection ** : Create
 Proxy -> SSHConnection ++ : CommandMessage
-SSHConnection -> RemoteComponent ++ : YAML
+SSHConnection -> RemoteComponent ++ : Call via shell, YAML as argument
 RemoteComponent -> RemoteComponent : Execute command
 SSHConnection <- RemoteComponent -- : YAML
 SSHConnection -> ResponseMessage ** : Create
