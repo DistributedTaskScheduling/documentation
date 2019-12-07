@@ -9,13 +9,17 @@ box "Local components"
     participant ResponseMessage
 end box
 
-Proxy -> Remote ++ : Call via shell, YAML as argument
+Proxy -> Remote ** : Call via shell, YAML as argument
+activate Remote
+Remote -> YAMLReader ** : Create
 Remote -> YAMLReader ++ : YAML
 YAMLReader -> CommandMessage ** : Create
 Remote <- YAMLReader -- : CommandMessage
 Remote -> Remote : Execute command
 Remote -> ResponseMessage ** : Create
 Proxy <- Remote -- : ResponseMessage as YAML
+destroy Remote
+destroy YAMLReader
 destroy CommandMessage
 destroy ResponseMessage
 @enduml
