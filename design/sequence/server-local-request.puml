@@ -1,0 +1,90 @@
+@startuml
+scale 2
+
+hide footbox
+
+box "User client" #LightBlue
+    boundary UserClientServerProxy
+end box
+
+box "Server: Local JobAdder" #LightGreen
+    participant LocalJobAdder
+    participant "command:ServerCommand"
+end box
+
+entity LinuxKernel
+
+entity ServerSocket
+
+box "Server: Daemon" #LightBlue
+    boundary ServerSocketHandler
+    participant "user_command:ServerCommand"
+    participant "db:Database"
+    participant Scheduler
+end box
+
+activate UserClientServerProxy
+
+' Call Server
+create LocalJobAdder
+UserClientServerProxy -> LocalJobAdder ** : Invoke LocalJobAdder
+
+UserClientServerProxy -> LocalJobAdder ++ : Send serialized Message
+
+' Parse Message
+LocalJobAdder -> "command:ServerCommand" ** : command = ServerCommand.parse(message)
+
+alt #transparent command is not None
+    LocalJobAdder -> "command:ServerCommand" ++ : get_user_id()
+    return user_id
+    LocalJobAdder -> LinuxKernel ++ : get_real_user_id()
+    return real_user_id
+    LocalJobAdder -> LinuxKernel ++ : is_user_in_admin_group()
+    return user_in_admin_group
+
+    alt #transparent user_id == real_user_id or user_in_admin_group
+        LocalJobAdder -> ServerSocket : Serialized message
+        ServerSocket -> ServerSocketHandler ++ : Serialized message
+
+        'Inside Server
+        ServerSocketHandler -> "user_command:ServerCommand" ** : user_command = ServerCommand.parse(Serialized message)
+        ServerSocketHandler -> "user_command:ServerCommand" ++ : execute(db)
+
+        alt msg.get_type() is add-job
+            "user_command:ServerCommand" -> "db:Database" ++ : register_new_job(job)
+            "db:Database" -> Scheduler : reschedule()
+            return
+            "user_command:ServerCommand" --> ServerSocketHandler : JobIDMessage
+        else msg.get_type() is cancel-job
+            "user_command:ServerCommand" -> "db:Database" ++ : response = set_flag(id, PENDING_CANCEL)
+            alt id is the ID of a running, queued or paused job
+                "db:Database" -> Scheduler : reschedule()
+                "db:Database" --> "user_command:ServerCommand" : AckMessage
+            else
+                return InvalidJobIDMessage
+            end
+            "user_command:ServerCommand" --> ServerSocketHandler : response
+        else msg.get_type() is query-job
+            "user_command:ServerCommand" -> "db:Database" ++ : response = get_job_status(id)
+            alt id is a valid job ID
+                "db:Database" --> "user_command:ServerCommand" : JobStatusMessage
+            else
+                return InvalidJobIDMessage
+            end
+            return response
+        end
+
+        return Serialized response
+        destroy "user_command:ServerCommand"
+        ServerSocket -> LocalJobAdder : Serialized response
+        LocalJobAdder --> UserClientServerProxy : Serialized response
+    else
+        LocalJobAdder --> UserClientServerProxy : Error, insufficient permissions
+    end
+    destroy "command:ServerCommand"
+else
+    return Error, invalid command
+end
+destroy LocalJobAdder
+
+@enduml
