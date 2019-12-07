@@ -1,0 +1,59 @@
+@startuml
+
+participant CentralServer
+
+box Worker Client
+    participant SSHConnection
+    participant JobWorker
+    participant YAMLConverter
+    participant CancelMessage
+    participant DockerWrapper
+    participant SuccessMessage
+    participant ErrorMessage
+end box
+
+activate SSHConnection
+CentralServer -> SSHConnection : YAML Message
+
+SSHConnection -> JobWorker : YAML Message
+activate JobWorker
+
+JobWorker -> YAMLConverter ++: Get object from YAML Message
+YAMLConverter -> CancelMessage ** : Create
+JobWorker <-- YAMLConverter --:  CancelMessage
+
+JobWorker -> CancelMessage ++: Execute
+CancelMessage -> DockerWrapper ++: Cancel job
+DockerWrapper -> DockerWrapper ++: Stop container
+alt job canceled successfully
+    CancelMessage <-- DockerWrapper : Success
+    deactivate DockerWrapper
+    JobWorker <-- CancelMessage : Success
+
+    JobWorker -> SuccessMessage ** : Create
+
+    JobWorker -> YAMLConverter ++: Get Yaml from Object
+    JobWorker <-- YAMLConverter --: Yaml Message
+
+    SSHConnection <- JobWorker : Success Message
+    CentralServer <- SSHConnection : Message
+    destroy SuccessMessage
+
+else error when canceling job
+    activate DockerWrapper
+    CancelMessage <-- DockerWrapper --: Error
+    deactivate DockerWrapper
+    JobWorker <-- CancelMessage --: Error 
+
+    JobWorker -> ErrorMessage **: Create 
+
+    JobWorker -> YAMLConverter ++: Get Yaml from Object
+    JobWorker <-- YAMLConverter --: Yaml Message
+
+    SSHConnection <- JobWorker : Error Message
+    deactivate JobWorker
+    CentralServer <- SSHConnection : Message
+    destroy ErrorMessage
+end
+destroy CancelMessage
+@enduml

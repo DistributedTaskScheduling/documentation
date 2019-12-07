@@ -1,0 +1,66 @@
+@startuml
+
+participant CentralServer
+
+box WorkerClient
+    participant SSHConnection
+    participant JobWorker
+    participant YAMLConverter
+    participant AddJobMessage
+    participant DockerWrapper
+    participant SuccessMessage
+    participant ErrorMessage
+end box
+
+activate SSHConnection
+CentralServer -> SSHConnection : YAML Message
+
+SSHConnection -> JobWorker : YAML Message
+activate JobWorker
+
+JobWorker -> YAMLConverter ++: Get object from YAML Message
+YAMLConverter -> AddJobMessage ** : Create
+JobWorker <-- YAMLConverter --: AddJobMessage
+JobWorker -> AddJobMessage++: Execute
+AddJobMessage -> DockerWrapper ++: Add job
+DockerWrapper -> DockerWrapper ++: Create, configure and start container
+
+alt container started successfully
+
+    AddJobMessage <-- DockerWrapper : Success
+    deactivate DockerWrapper
+
+    JobWorker <-- AddJobMessage : Success
+    JobWorker -> SuccessMessage **: Create
+
+    JobWorker -> YAMLConverter ++: Get Yaml from Object
+    JobWorker <-- YAMLConverter --: Yaml Message
+
+    SSHConnection <- JobWorker : Yaml Message
+    CentralServer <- SSHConnection : Yaml Message
+
+    destroy SuccessMessage
+
+else Error
+
+    activate DockerWrapper
+    AddJobMessage <-- DockerWrapper : Error 
+    deactivate DockerWrapper
+    deactivate DockerWrapper
+
+    JobWorker <-- AddJobMessage : Error 
+    deactivate AddJobMessage
+    
+    JobWorker -> ErrorMessage **: Create Error Message
+    
+    JobWorker -> YAMLConverter ++: Get Yaml from Object
+    JobWorker <-- YAMLConverter --: Yaml Message
+    
+    SSHConnection <- JobWorker : Yaml Message
+    deactivate JobWorker
+    CentralServer <- SSHConnection : Yaml Message
+    destroy ErrorMessage
+end
+destroy AddJobMessage
+
+@enduml

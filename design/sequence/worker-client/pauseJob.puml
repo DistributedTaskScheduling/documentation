@@ -1,0 +1,67 @@
+@startuml
+
+participant CentralServer
+
+box WorkerClient
+    participant SSHConnection
+    participant JobWorker
+    participant YAMLConverter
+    participant PauseMessage
+    participant DockerWrapper
+    participant SuccessMessage
+    participant ErrorMessage
+end box
+
+activate SSHConnection
+CentralServer -> SSHConnection : YAML Message
+
+SSHConnection -> JobWorker : YAML Message
+activate JobWorker
+
+JobWorker -> YAMLConverter ++: Get object from YAML Message
+YAMLConverter -> PauseMessage ** : Create
+JobWorker <-- YAMLConverter --: PauseMessage
+JobWorker -> PauseMessage ++: Execute
+PauseMessage -> DockerWrapper ++: Pause job
+DockerWrapper -> DockerWrapper ++:  Pause container
+
+alt container paused successfuly 
+
+    PauseMessage <-- DockerWrapper : Success
+    deactivate DockerWrapper
+
+    JobWorker <-- PauseMessage: Success
+    JobWorker -> SuccessMessage ** : Create
+
+    JobWorker -> YAMLConverter ++: Get Yaml from Object
+    JobWorker <-- YAMLConverter --: Yaml Message
+
+    SSHConnection <- JobWorker : Yaml Message
+    CentralServer <- SSHConnection : Yaml Message
+
+    destroy SuccessMessage
+
+else Error
+
+    activate DockerWrapper
+    PauseMessage <-- DockerWrapper : Error 
+    deactivate DockerWrapper
+    deactivate DockerWrapper
+
+    JobWorker <-- PauseMessage: Error 
+    deactivate PauseMessage
+    
+    JobWorker -> ErrorMessage **: Create 
+    
+    JobWorker -> YAMLConverter ++: Get Yaml from Object
+    JobWorker <-- YAMLConverter --: Yaml Message
+    
+    SSHConnection <- JobWorker : Yaml Message
+    deactivate JobWorker
+    CentralServer <- SSHConnection : Yaml Message
+    destroy ErrorMessage
+
+end
+
+
+@enduml

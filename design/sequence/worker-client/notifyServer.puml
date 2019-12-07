@@ -1,0 +1,24 @@
+@startuml
+
+participant CentralServer
+
+box Worcer Client
+    participant SSHConnection
+    participant JobWorker
+    participant DockerWrapper
+    participant YAMLConverter
+    participant JobFinishedMessage
+end box
+
+activate SSHConnection
+
+activate DockerWrapper
+DockerWrapper -> JobWorker ++: Container finished
+JobWorker -> JobFinishedMessage **: Create
+JobWorker -> YAMLConverter ++: Get YAML from Object
+destroy JobFinishedMessage
+JobWorker <- YAMLConverter --: Yaml Message
+SSHConnection <- JobWorker : Yaml Message
+CentralServer <- SSHConnection : Yaml Message
+
+@enduml

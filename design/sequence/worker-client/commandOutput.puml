@@ -1,0 +1,30 @@
+@startuml
+
+participant CentralServer
+
+box WorkerClient
+    participant SSHConnection
+    participant JobWorker
+    participant YAMLConverter
+    participant GetOutputMessage
+    participant DockerWrapper
+end box
+
+activate SSHConnection
+CentralServer -> SSHConnection : YAML Message
+
+SSHConnection -> JobWorker : YAML Message
+activate JobWorker
+
+JobWorker -> YAMLConverter ++: Get object from YAML Message
+YAMLConverter -> GetOutputMessage ** : Create
+JobWorker <-- YAMLConverter --: GetOutputMessage
+JobWorker -> GetOutputMessage ++: Execute
+GetOutputMessage -> DockerWrapper ++: Get container output
+GetOutputMessage <-- DockerWrapper --: Stream logs
+JobWorker <-- GetOutputMessage --: Stream logs
+SSHConnection <- JobWorker : Stream logs
+CentralServer <- SSHConnection : Stream logs
+
+@enduml
+
