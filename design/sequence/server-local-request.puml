@@ -55,8 +55,8 @@ alt #transparent command is not None
             "db:Database" -> Scheduler : reschedule()
             return
             "user_command:ServerCommand" --> ServerSocketHandler : JobIDMessage
-        else msg.get_type() is cancel-job
-            "user_command:ServerCommand" -> "db:Database" ++ : response = set_flag(id, PENDING_CANCEL)
+        else msg.get_type() is kill-job
+            "user_command:ServerCommand" -> "db:Database" ++ : response = set_flag(id, PENDING_KILL)
             alt id is the ID of a running, queued or paused job
                 "db:Database" -> Scheduler : reschedule()
                 "db:Database" --> "user_command:ServerCommand" : AckMessage
