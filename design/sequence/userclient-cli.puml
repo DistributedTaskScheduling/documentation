@@ -7,7 +7,7 @@ box UserClient
     participant UserClientCLIHandler
     participant UserClientConfig
     participant ServerProxy
-    participant as UserInputConfig
+    participant UserInputConfig
     participant ServerCommand
 end box
 
