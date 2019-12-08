@@ -2,25 +2,26 @@
 
 box "Local components"
     boundary Boundary
-    participant CommandMessage
+    participant Command
     participant SingleMessageProxy as Proxy
     participant SSHConnection
-    participant ResponseMessage
+    participant Response
 end box
 
-Boundary -> Proxy ++ : CommandMessage
+Boundary -> Proxy ++ : Command
 Proxy -> SSHConnection ** : Create
-Proxy -> SSHConnection ++ : CommandMessage
+Proxy -> SSHConnection ++ : Command
 SSHConnection -> Remote ** : Call via shell, YAML as argument
 activate Remote
-Remote -> Remote : Execute command
-SSHConnection <- Remote -- : ResponseMessage as YAML
+... Remote processes Command, sets environment variable for Response ...
+SSHConnection <- Remote -- : Return
 destroy Remote
-SSHConnection -> ResponseMessage ** : Create
-Proxy <- SSHConnection -- : ResponseMessage
+SSHConnection -> SSHConnection: Read environment variable
+SSHConnection -> Response ** : Create
+Proxy <- SSHConnection -- : Response
 Proxy -> SSHConnection !!
-Boundary <- Proxy -- : ResponseMessage
+Boundary <- Proxy -- : Response
 
-destroy ResponseMessage
+destroy Response
 
 @enduml
