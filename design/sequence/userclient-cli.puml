@@ -7,8 +7,8 @@ box UserClient
     participant UserClientCLIHandler
     participant UserClientConfig
     participant ServerProxy
-    participant UserInputConfig
-    participant UserCommandMessage
+    participant as UserInputConfig
+    participant ServerCommand
 end box
 
 User -> JobAdder ** : Raw user input
@@ -19,17 +19,17 @@ JobAdder -> ServerProxy ** : Create
 JobAdder -> UserClientCLIHandler ++ : Raw user input
 UserClientCLIHandler -> UserInputConfig ** : Create from raw user input
 UserClientCLIHandler -> UserClientConfig : Override with UserInputConfig
-UserClientCLIHandler -> UserCommandMessage ** : Create from UserClientConfig
-JobAdder <- UserClientCLIHandler -- : UserCommandMessage
+UserClientCLIHandler -> ServerCommand ** : Create from UserClientConfig
+JobAdder <- UserClientCLIHandler -- : ServerCommand
 destroy UserInputConfig
-JobAdder -> ServerProxy ++ : UserCommandMessage
-... ServerProxy sends UserCommandMessage to server, receives UserResponseMessage ...
-JobAdder <- ServerProxy -- : UserResponseMessage
-User <- JobAdder -- : UserResponseMessage
+JobAdder -> ServerProxy ++ : ServerCommand
+... ServerProxy sends ServerCommand to server, receives ServerResponse ...
+JobAdder <- ServerProxy -- : ServerResponse
+User <- JobAdder -- : ServerResponse
 destroy UserClientCLIHandler
 destroy UserClientConfig
 destroy ServerProxy
-destroy UserCommandMessage
+destroy ServerCommand
 destroy JobAdder
 
 @enduml
