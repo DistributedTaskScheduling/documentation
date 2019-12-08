@@ -4,7 +4,7 @@ participant Proxy
 
 box "Local components"
     participant Remote
-    participant MessageHandler
+    participant CommandHandler
     participant YAMLReader
     participant Command
     participant Response
@@ -12,18 +12,18 @@ end box
 
 Proxy -> Remote ** : Call via shell, YAML as argument
 activate Remote
-Remote --> MessageHandler ++ : Send Command as YAML via socket
+Remote --> CommandHandler ++ : Send Command as YAML via socket
 Remote -> Remote : Listen for response on socket
-MessageHandler -> YAMLReader ++ : Command as YAML
+CommandHandler -> YAMLReader ++ : Command as YAML
 YAMLReader -> Command ** : Create
-MessageHandler <- YAMLReader -- : Command
-MessageHandler -> MessageHandler : Execute command
-MessageHandler -> Response ** : Create
-MessageHandler --> Remote : Send Response as YAML via socket
+CommandHandler <- YAMLReader -- : Command
+CommandHandler -> CommandHandler : Execute command
+CommandHandler -> Response ** : Create
+CommandHandler --> Remote : Send Response as YAML via socket
 destroy Command
 destroy Response
-MessageHandler -> MessageHandler : Listen for more Messages
-deactivate MessageHandler
+CommandHandler -> CommandHandler : Listen for more Messages
+deactivate CommandHandler
 Remote -> Remote : Set environment variable \n with Response YAML string
 Proxy <- Remote -- : Return
 destroy Remote
