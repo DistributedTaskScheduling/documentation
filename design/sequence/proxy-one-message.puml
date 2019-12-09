@@ -2,25 +2,28 @@
 
 box "Local components"
     boundary Boundary
-    participant Command
-    participant SingleMessageProxy as Proxy
-    participant SSHConnection
-    participant Response
+    participant "command:Command" as Command
+    participant ":SingleMessageProxy" as Proxy
+    participant ":SSHConnection" as SSHConnection
+    participant "response:Response" as Response
 end box
+participant ":Remote" as Remote
 
-Boundary -> Proxy ++ : Command
+Boundary -> Proxy ++ : command
 Proxy -> SSHConnection ** : Create
-Proxy -> SSHConnection ++ : Command
-SSHConnection -> Remote ** : Call via shell, YAML as argument
+Proxy -> SSHConnection ++ : command
+SSHConnection --> Remote ** : Call via SSH
 activate Remote
-... Remote processes Command, sets environment variable for Response ...
-SSHConnection <- Remote -- : Return
-destroy Remote
-SSHConnection -> SSHConnection: Read environment variable
+Remote -> Remote : Read from stdin
+SSHConnection --> Remote : Write command.serialize() on stdin
+SSHConnection -> Remote : Read from stdout
+... Remote processes command ...
+Remote --> Remote : Write response as \nYAML to stdout
 SSHConnection -> Response ** : Create
-Proxy <- SSHConnection -- : Response
-Proxy -> SSHConnection !!
-Boundary <- Proxy -- : Response
+destroy Remote
+Proxy <-- SSHConnection -- : response
+Proxy -> SSHConnection !! : Close
+Boundary <-- Proxy -- : response
 
 destroy Response
 
