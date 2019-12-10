@@ -1,21 +1,30 @@
 @startuml
 
-box "Server"
-    participant ":WorkerClientProxy" as wc
-    participant ":Database" as db
-    participant ":Notifier" as n
-    participant ":Scheduler" as s
+box "worker client"
+    participant ":WorkerClient" as wc
 end box
 
-wc ->> db ++: set_idle(wc_id: str)
-db  -> db ++: set_status(uc_id, WCStatus.IDLE) 
-db --> db --:
+box "Server" #LightBlue
+    participant ":WorkerClientProxy" as wcp
+    participant ":Scheduler" as s
+    participant ":Database" as db
+    participant ":Notifier" as n
+end box
+
+wc ->> wcp ++ : finished_job: Job
+wcp -> s ++ : finish_job(finished_job)
+s -> db ++ : finish(finished_job)
+db -> db ++: set_wc_status(finished_job.wc_id, WCStatus.IDLE)
+db-->db --
+db -> db ++: set_job_status(finished_job, JobStatus.FINISHED)
+db-->db --
 db -> n ++: notify(Message)
 n --> db --:
+db --> s --
 
-db -> s ++: reschedule()
-s --> db --
-
-deactivate db
+s -> s ++: reschedule()
+s --> s --
+s --> wcp --
+wcp--
 
 @enduml
