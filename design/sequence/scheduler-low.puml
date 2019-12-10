@@ -17,7 +17,7 @@ activate "job:Job"
 break job.get_status()==JobStatus.CANCELED
     ":Scheduler" -> "job:Job" ++:check_was_queued()
     "job:Job" --> ":Scheduler" --: was_running: bool
-    
+
     alt was_running
         ":Scheduler" -> ":Dispatcher" ++: cancel_job(job)
         ":Dispatcher" --> ":Scheduler" --: Message
@@ -42,7 +42,7 @@ end
 ":Scheduler" -> ":Database" ++ : set_cost(job, cost)
 ":Database" --> ":Scheduler" -- 
 break wm_id != ""
-    
+
     ":Scheduler" -> ":Database" ++: change_state(job, JobStatus.RUNNING)
     ":Database" --> ":Scheduler" --:
 
@@ -54,11 +54,13 @@ end
 
 break  job.get_priority()==URGENT
     ":Scheduler" -> ":Scheduler" ++: release_resources(job)
-    ":Scheduler" -> ":Database" ++: change_state(job, JobStatus.PAUSED)
+    ":Scheduler" --> ":Scheduler" -- : paused: list[job]
+    ":Scheduler" -> ":Dispatcher" ++ :  
+    ":Scheduler" -> ":Database" ++: change_state(paused, JobStatus.PAUSED)
     ":Database" --> ":Scheduler" --:
-    
+
     ":Scheduler" -> ":Dispatcher" ++: dispatch_job(job)
-    
+
     ":Scheduler" <-- ":Dispatcher" --: Message
     <-- ":Scheduler" : Message
     ":Scheduler" --> ":Scheduler" --:
