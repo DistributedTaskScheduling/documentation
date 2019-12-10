@@ -14,28 +14,22 @@ end box
 activate "job:Job"
 
 
-break job.get_status()==JobStatus.CANCELED || job.get_status()==JobStatus.FINISHED
-    ":Scheduler" -> "job:Job" ++:check_was_queued()
+break job.get_status()==JobStatus.CANCELED||\n job.get_status()==JobStatus.FINISHED
+    ":Scheduler" -> "job:Job" ++:check_was_running()
     "job:Job" --> ":Scheduler" --: was_running: bool
 
     alt was_running
-        ":Scheduler" -> ":Dispatcher" ++: cancel_job(job)
-        ":Dispatcher" --> ":Scheduler" --: Message
-        <-- ":Scheduler" : Message
+        alt job.get_status()==JobStatus.CANCELED
+            ":Scheduler" -> ":Dispatcher" ++: kill_job(job)
+            ":Dispatcher" --> ":Scheduler" --
+        end
         ":Scheduler" -> ":Database" ++: get_next_job(job.wc_id)
         ":Database" --> ":Scheduler" --: new_job: Job
         ":Scheduler" -> ":Dispatcher" ++ : dispatch_job(new_job)
         ":Dispatcher" --> ":Scheduler" --:Message
         ":Scheduler" -> ":Database"++: set_job_status(new_job, JobStatus.RUNNING)
         ":Database" --> ":Scheduler" --
-        
     end
-end
-
-break job.get_status() == JobStatus.FINISHED
-    
-
-
 end
 
 ":Scheduler" -> ":Scheduler" ++: find_wcs(job)
@@ -77,7 +71,6 @@ break  job.get_priority()==URGENT
     <-- ":Scheduler" : Message
 
 end
-
 
 ":Scheduler" -> ":Scheduler" ++: resort()
 ":Scheduler" -> ":Database" ++: update_queued_cost(new_cost)
