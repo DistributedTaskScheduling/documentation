@@ -1,0 +1,21 @@
+@startuml
+
+box "Server"
+    participant ":WorkerClientProxy" as wc
+    participant ":Database" as db
+    participant ":Notifier" as n
+    participant ":Scheduler" as s
+end box
+
+wc ->> db ++: set_idle(wc_id: str)
+db  -> db ++: set_status(uc_id, WCStatus.IDLE) 
+db --> db --:
+db -> n ++: notify(Message)
+n --> db --:
+
+db -> s ++: reschedule()
+s --> db --
+
+deactivate db
+
+@enduml

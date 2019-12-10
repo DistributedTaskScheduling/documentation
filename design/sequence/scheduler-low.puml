@@ -1,0 +1,80 @@
+@startuml
+
+box "Central Server" #Lightblue
+    participant ":Database"
+    participant ":Scheduler"
+    participant "job:Job"
+    participant ":Dispatcher"
+end box
+
+
+":Database" -> ":Scheduler" ++: reschedule()
+":Scheduler" -> ":Database" ++: get_changed_job()
+":Database" --> ":Scheduler" --: job: Job
+activate "job:Job"
+
+
+break job.get_status()==JobStatus.CANCELED
+    ":Scheduler" -> "job:Job" ++:check_was_queued()
+    "job:Job" --> ":Scheduler" --: was_running: bool
+    
+    alt was_running
+        ":Scheduler" -> ":Dispatcher" ++: cancel_job(job)
+        ":Dispatcher" --> ":Scheduler" --: Message
+        <-- ":Scheduler" : Message
+    end
+end
+
+":Scheduler" -> ":Scheduler" ++: find_wcs(job)
+":Scheduler" -> ":Database" ++: get_wc_list()
+":Database" --> ":Scheduler" --: wc_list:list[str]
+":Scheduler" --> ":Scheduler" --: suitable_wcs:list[str]
+
+":Scheduler" -> "job:Job" ++: set_wc_ids(suitable_wcs)
+"job:Job" --> ":Scheduler" --:
+
+
+":Scheduler" -> ":Database" ++: check_idle(suitable_wcs)
+":Database" --> ":Scheduler" --: wc_id:str
+
+":Scheduler" -> "job:Job" ++: calc_cost()
+"job:Job" --> ":Scheduler" --: cost:int
+":Scheduler" -> ":Database" ++ : set_cost(job, cost)
+":Database" --> ":Scheduler" -- 
+break wm_id != ""
+    
+    ":Scheduler" -> ":Database" ++: change_state(job, JobStatus.RUNNING)
+    ":Database" --> ":Scheduler" --:
+
+    ":Scheduler" -> ":Dispatcher" ++: dispatch_job(job)
+    ":Dispatcher" --> ":Scheduler" -- : Message
+    <-- ":Scheduler" : Message
+end
+
+
+break  job.get_priority()==URGENT
+    ":Scheduler" -> ":Scheduler" ++: release_resources(job)
+    ":Scheduler" -> ":Database" ++: change_state(job, JobStatus.PAUSED)
+    ":Database" --> ":Scheduler" --:
+    
+    ":Scheduler" -> ":Dispatcher" ++: dispatch_job(job)
+    
+    ":Scheduler" <-- ":Dispatcher" --: Message
+    <-- ":Scheduler" : Message
+    ":Scheduler" --> ":Scheduler" --:
+
+end
+
+
+":Scheduler" -> ":Scheduler" ++: resort()
+":Scheduler" -> ":Database": update_queued_cost(new_cost)
+":Database" --> ":Scheduler" --: 
+
+":Scheduler" --> ":Scheduler" --:
+
+
+
+     <-- ":Scheduler" : Message
+deactivate ":Scheduler"
+
+@enduml
