@@ -14,12 +14,12 @@ end box
 activate "job:Job"
 
 
-break job.get_status()==JobStatus.CANCELED||\n job.get_status()==JobStatus.FINISHED
+break job.get_status()==JobStatus.KILLED||\n job.get_status()==JobStatus.FINISHED
     ":Scheduler" -> "job:Job" ++:check_was_running()
     "job:Job" --> ":Scheduler" --: was_running: bool
 
     alt was_running
-        alt job.get_status()==JobStatus.CANCELED
+        alt job.get_status()==JobStatus.KILLED
             ":Scheduler" -> ":Dispatcher" ++: kill_job(job)
             ":Dispatcher" --> ":Scheduler" --
         end
