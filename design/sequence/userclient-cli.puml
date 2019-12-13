@@ -1,0 +1,35 @@
+@startuml
+
+Actor User
+
+box UserClient 
+    participant ":JobAdder" as JobAdder
+    participant ":UserCLIHandler" as UserClientCLIHandler
+    participant "userClientConfig:UserConfig" as UserClientConfig
+    participant ":ServerProxy" as ServerProxy
+    participant "userInputConfig:UserConfig" as UserInputConfig
+    participant ":ServerCommand" as ServerCommand
+end box
+
+User -> JobAdder ** : Raw user input
+activate JobAdder
+JobAdder -> UserClientCLIHandler ** : Create
+UserClientCLIHandler -> UserClientConfig ** : Create from file
+JobAdder -> ServerProxy ** : Create
+JobAdder -> UserClientCLIHandler ++ : Raw user input
+UserClientCLIHandler -> UserInputConfig ** : Create from raw user input
+UserClientCLIHandler -> UserClientConfig : Override with UserInputConfig
+UserClientCLIHandler -> ServerCommand ** : Create from UserClientConfig
+JobAdder <-- UserClientCLIHandler -- : ServerCommand
+destroy UserInputConfig
+JobAdder -> ServerProxy ++ : ServerCommand
+... ServerProxy sends ServerCommand to server, receives ServerResponse ...
+JobAdder <-- ServerProxy -- : ServerResponse
+User <-- JobAdder -- : ServerResponse
+destroy UserClientCLIHandler
+destroy UserClientConfig
+destroy ServerProxy
+destroy ServerCommand
+destroy JobAdder
+
+@enduml
