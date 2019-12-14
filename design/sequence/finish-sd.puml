@@ -33,7 +33,7 @@ db-->db --
 
 db -> n ++: notify(msg)
 note right of db 
-    Sends an email 📩 to the user.
+    Sends an email to the user.
 end note
 n --> db --:
 
