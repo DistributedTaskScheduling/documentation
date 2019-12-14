@@ -6,7 +6,7 @@
 box "Local components"
     boundary Boundary
     participant "command:Command" as Command
-    participant ":SingleMessageProxy" as Proxy
+    participant ":ContinuousProxy" as Proxy
     participant ":SSHConnection" as SSHConnection
     participant "response:Response" as Response
 end box
