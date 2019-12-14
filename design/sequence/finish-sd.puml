@@ -1,30 +1,46 @@
 @startuml
 
 box "worker client"
-    participant ":WorkerClient" as wc
+    participant ":WorkerProxy" as wc
+    participant ":Message" as m
 end box
 
 box "Server" #LightBlue
-    participant ":WorkerClientProxy" as wcp
-    participant ":Scheduler" as s
+    participant ":ServerCommandHandler" as sch
     participant ":Database" as db
     participant ":Notifier" as n
+    participant ":Scheduler" as s
 end box
 
-wc ->> wcp ++ : finished_job: Job
-wcp -> s ++ : finish_job(finished_job)
-s -> db ++ : finish(finished_job)
-db -> db ++: set_wc_status(finished_job.wc_id, WCStatus.IDLE)
+create m 
+wc -> m ++: <<create>>
+m --> wc --: msg: Message
+
+wc ->> sch ++ : finish_job(msg)
+sch -> sch ++: get_job()
+note right of sch
+    parse msg to get the finished_job
+end note
+sch --> sch --: finished_job:Job
+
+sch -> db ++ : finish_job(finished_job)
+db -> db ++: set_wc_status(finished_job.wc_id, WCStatus.AVAILABLE)
 db-->db --
 db -> db ++: set_job_status(finished_job, JobStatus.FINISHED)
 db-->db --
-db -> n ++: notify(Message)
-n --> db --:
-db --> s --
 
-s -> s ++: reschedule()
-s --> s --
-s --> wcp --
-wcp--
+
+
+db -> n ++: notify(msg)
+note right of db 
+    Sends an email 📩 to the user.
+end note
+n --> db --:
+
+
+db -> s ++: reschedule()
+s --> db --
+db--> sch --
+sch--
 
 @enduml
