@@ -10,6 +10,11 @@ end box
 
 ":Database" -> ":Scheduler" ++: reschedule()
 ":Scheduler" -> ":Database" ++: get_changed_job()
+note left of ":Scheduler"
+    Return the last job that was modified(killed or queued)
+    and act accordingly.
+end note
+
 ":Database" --> ":Scheduler" --: job: Job
 activate "job:Job"
 
@@ -23,32 +28,63 @@ break job.get_status()==JobStatus.KILLED||\n job.get_status()==JobStatus.FINISHE
             ":Scheduler" -> ":Dispatcher" ++: kill_job(job)
             ":Dispatcher" --> ":Scheduler" --
         end
-        ":Scheduler" -> ":Database" ++: get_next_job(job.wc_id)
-        ":Database" --> ":Scheduler" --: new_job: Job
-        ":Scheduler" -> ":Dispatcher" ++ : dispatch_job(new_job)
-        ":Dispatcher" --> ":Scheduler" --:Message
-        ":Scheduler" -> ":Database"++: set_job_status(new_job, JobStatus.RUNNING)
-        ":Database" --> ":Scheduler" --
+        ":Scheduler" -> ":Database" ++: get_next_jobs(job.wc_id)
+        note left of ":Scheduler"
+            Returns a list of jobs that could run on the 
+            recently freed resources. The sum of these Jobs'
+            effective priority is as high as possible.
+        end note
+
+        ":Database" --> ":Scheduler" --: jobs: list[Job]
+        loop j in jobs
+            ":Scheduler" -> ":Dispatcher" ++ : dispatch_job(j)
+            note right of ":Scheduler"
+                Calls the dispatcher to start a job
+                returns a message to check if the job
+                started successfully
+            end note
+            ":Dispatcher" --> ":Scheduler" --:Message
+            ":Scheduler" -> ":Database"++: set_job_status(j, JobStatus.RUNNING)
+            ":Database" --> ":Scheduler" --
+        end    
     end
 end
 
-":Scheduler" -> ":Scheduler" ++: find_wcs(job)
-":Scheduler" -> ":Database" ++: get_wc_list()
-":Database" --> ":Scheduler" --: wc_list:list[str]
-":Scheduler" --> ":Scheduler" --: suitable_wcs:list[str]
+break  job.get_priority()==URGENT
+    ":Scheduler" -> ":Database" ++: get_machine_with_specs(job.get_specs())
+    note left of ":Scheduler"
+        Returns a suitable work machine 
+        where the urgent job can run while
+        keeping the sum of all the jobs'
+        effective priority as low as possible.
+        (does not return a work machine
+        that is already running an urgent job)
+    end note
+    ":Database" --> ":Scheduler" --: wc_id: str
+    ":Scheduler" -> ":Scheduler" ++: release_resources(wc_id)
+    note right of  ":Scheduler"
+        Pauses jobs to release enough resources to run the urgent
+        job and returns a list of paused jobs to be resumed later.
+    end note
+    ":Scheduler" --> ":Scheduler" -- : paused: list[job]
+    ":Scheduler" -> ":Database" ++: change_state(paused, JobStatus.PAUSED)
+    ":Database" --> ":Scheduler" --:
 
-":Scheduler" -> "job:Job" ++: set_wc_ids(suitable_wcs)
-"job:Job" --> ":Scheduler" --:
+    ":Scheduler" -> ":Dispatcher" ++: dispatch_job(job)
+
+    ":Scheduler" <-- ":Dispatcher" --: Message
+    <-- ":Scheduler" : Message
+end
 
 
-":Scheduler" -> ":Database" ++: check_idle(suitable_wcs)
+":Scheduler" -> ":Database" ++: get_machine_with_available_specs(job.get_specs())
+    note left of ":Scheduler"
+        Checks if there are enough resources to directly run the job 
+        without adding it to the queue
+    end note
 ":Database" --> ":Scheduler" --: wc_id:str
 
-":Scheduler" -> "job:Job" ++: calc_cost()
-"job:Job" --> ":Scheduler" --: cost:int
-":Scheduler" -> ":Database" ++ : set_cost(job, cost)
-":Database" --> ":Scheduler" -- 
-break wm_id != ""
+break wm_id not none
 
     ":Scheduler" -> ":Database" ++: change_state(job, JobStatus.RUNNING)
     ":Database" --> ":Scheduler" --:
@@ -59,23 +95,13 @@ break wm_id != ""
 end
 
 
-break  job.get_priority()==URGENT
-    ":Scheduler" -> ":Scheduler" ++: release_resources(job)
-    ":Scheduler" --> ":Scheduler" -- : paused: list[job]
-    ":Scheduler" -> ":Database" ++: change_state(paused, JobStatus.PAUSED)
-    ":Database" --> ":Scheduler" --:
-
-    ":Scheduler" -> ":Dispatcher" ++: dispatch_job(job)
-
-    ":Scheduler" <-- ":Dispatcher" --: Message
-    <-- ":Scheduler" : Message
-
-end
 
 ":Scheduler" -> ":Scheduler" ++: resort()
-":Scheduler" -> ":Database" ++: update_queued_cost(new_cost)
-":Database" --> ":Scheduler" --: 
-
+    note right of ":Scheduler"
+        re-sort all the jobs in the database
+        by their effective priority by calling
+        get_eff_priority() on every job.
+    end note
 ":Scheduler" --> ":Scheduler" --:
 
 
