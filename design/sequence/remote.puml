@@ -5,7 +5,6 @@ participant Proxy
 box "Local components"
     participant ":Remote" as Remote
     participant ":CommandHandler" as CommandHandler
-    participant ":YAMLReader" as YAMLReader
     participant "command:Command" as Command
     participant "response:Response" as Response
 end box
@@ -18,9 +17,7 @@ Proxy --> Remote : Write command as \nYAML to stdin
 Proxy -> Remote : Read from stdout
 Remote --> CommandHandler ++ : Send command as YAML via socket
 Remote -> Remote : Listen for response on socket
-CommandHandler -> YAMLReader ++ : command as YAML
-YAMLReader -> Command ** : Create
-CommandHandler <- YAMLReader -- : command
+CommandHandler -> Command ** : Create from YAML
 CommandHandler -> Command ++ : execute()
 ... command does something ...
 CommandHandler <-- Command -- 
@@ -30,6 +27,6 @@ CommandHandler -> CommandHandler : Listen for more Commands
 destroy Command
 destroy Response
 deactivate CommandHandler
-Remote -> Remote : Write response.serialize() to stdin
+Remote -> Remote : Write response as YAML to stdout
 destroy Remote
 @enduml
