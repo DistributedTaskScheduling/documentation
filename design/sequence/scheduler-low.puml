@@ -1,112 +1,104 @@
-@startuml
+@startuml test
 
-box "Central Server" #Lightblue
-    participant ":Database"
-    participant ":Scheduler"
-    participant "job:Job"
-    participant ":Dispatcher"
+box "Server"
+    participant ":Database" as db
+    participant ":Scheduler" as s
+    participant ":Dispatcher" as d
 end box
 
+s++
+s -> db ++: get_runnable_jobs()
+db --> s --: runnig_jobs: list[Job]
 
-":Database" -> ":Scheduler" ++: reschedule()
-":Scheduler" -> ":Database" ++: get_changed_job()
-note left of ":Scheduler"
-    Return the last job that was modified(killed or queued)
-    and act accordingly.
+s -> db ++: get_available_wm()
+db --> s --: available_wm: list[WorkMachine]
+
+s -> s ++: sort_by_effective_priority(running_jobs)
+note right of s 
+    this method sorts all the job by the effective 
+    priority and reterns a sorted list 
 end note
+s --> s --: running_jobs
 
-":Database" --> ":Scheduler" --: job: Job
-activate "job:Job"
-
-
-break job.get_status()==JobStatus.KILLED||\n job.get_status()==JobStatus.FINISHED
-    ":Scheduler" -> "job:Job" ++:check_was_running()
-    "job:Job" --> ":Scheduler" --: was_running: bool
-
-    alt was_running
-        alt job.get_status()==JobStatus.KILLED
-            ":Scheduler" -> ":Dispatcher" ++: kill_job(job)
-            ":Dispatcher" --> ":Scheduler" --
-        end
-        ":Scheduler" -> ":Database" ++: get_next_jobs(job.wc_id)
-        note left of ":Scheduler"
-            Returns a list of jobs that could run on the 
-            recently freed resources. The sum of these Jobs'
-            effective priority is as high as possible.
+s -> s ++: sort_wm_by_preemption_cost()
+    loop wm in available_wm
+        s -> s ++: calculate_preemption_cost()
+        note right of s 
+            we will need this later for jobs with priority 
+            above preemption (returns a sorted list)
         end note
+        s --> s --: preemption_cost: int
+    end 
+s --> s --: preemption_list: list[WorkMachine]
 
-        ":Database" --> ":Scheduler" --: jobs: list[Job]
-        loop j in jobs
-            ":Scheduler" -> ":Dispatcher" ++ : dispatch_job(j)
-            note right of ":Scheduler"
-                Calls the dispatcher to start a job
-                returns a message to check if the job
-                started successfully
+s -> s ++: sort_wm_by_blocking_cost()
+    loop wm in available_wm
+        s -> s ++: calculate_blocking_cost()
+        note right of s 
+            we will need this later for jobs with priority 
+            above blocking (returns a sorted list)
+        end note
+        s --> s --: blocking_cost: int
+    end 
+s --> s --: blocking_list: list[WorkMachine]
+
+
+
+loop    for j in running_jobs
+
+    loop wm in available_wm
+        s -> s ++: check_specs()
+        s --> s --: is_checked: bool
+        alt is_checked
+            s -> s ++: match()
+            note right of s
+                match method will add the job and the work 
+                machine to the list of jobs to be dispatched 
             end note
-            ":Dispatcher" --> ":Scheduler" --:Message
-            ":Scheduler" -> ":Database"++: set_job_status(j, JobStatus.RUNNING)
-            ":Database" --> ":Scheduler" --
+            s --> s --:
         end    
     end
+
+    alt j.get_priority > preemption
+        loop wm in  preemption_list
+        s -> s ++: check_match(0)
+        note right of s
+            checks if we can run j on wm if yes then j and wm 
+            will be added to the list of jobs to be dispatched
+        end note
+        s --> s --:
+        end
+
+
+    else j.get_priority > blocking 
+        loop wm in  blocking_list
+        s -> s ++: check_match(1)
+        note right of s 
+            sets a blocking flag for wm
+        end note 
+        s --> s --: 
+        end
+
+    end
+
+
+    s -> d ++: dispatch(changed_jobs: list[Job], changed_wms: list[WorkMachine])
+    note right of s 
+        send all the changes to the Dispatcher
+    end note
+    d -> d ++: check_changes()
+        note right of d 
+            Dispatcher finds the changes made 
+            and acts upon that information
+        end note 
+    d --> d --: messages: list[Message]
+    d --> s --: messages
 end
 
-break  job.get_priority()==URGENT
-    ":Scheduler" -> ":Database" ++: get_machine_with_specs(job.get_specs())
-    note left of ":Scheduler"
-        Returns a suitable work machine 
-        where the urgent job can run while
-        keeping the sum of all the jobs'
-        effective priority as low as possible.
-        (does not return a work machine
-        that is already running an urgent job)
-    end note
-    ":Database" --> ":Scheduler" --: wc_id: str
-    ":Scheduler" -> ":Scheduler" ++: release_resources(wc_id)
-    note right of  ":Scheduler"
-        Pauses jobs to release enough resources to run the urgent
-        job and returns a list of paused jobs to be resumed later.
-    end note
-    ":Scheduler" --> ":Scheduler" -- : paused: list[job]
-    ":Scheduler" -> ":Database" ++: change_state(paused, JobStatus.PAUSED)
-    ":Database" --> ":Scheduler" --:
-
-    ":Scheduler" -> ":Dispatcher" ++: dispatch_job(job)
-
-    ":Scheduler" <-- ":Dispatcher" --: Message
-    <-- ":Scheduler" : Message
-end
-
-
-":Scheduler" -> ":Database" ++: get_machine_with_available_specs(job.get_specs())
-    note left of ":Scheduler"
-        Checks if there are enough resources to directly run the job 
-        without adding it to the queue
-    end note
-":Database" --> ":Scheduler" --: wc_id:str
-
-break wm_id not none
-
-    ":Scheduler" -> ":Database" ++: change_state(job, JobStatus.RUNNING)
-    ":Database" --> ":Scheduler" --:
-
-    ":Scheduler" -> ":Dispatcher" ++: dispatch_job(job)
-    ":Dispatcher" --> ":Scheduler" -- : Message
-    <-- ":Scheduler" : Message
-end
-
-
-
-":Scheduler" -> ":Scheduler" ++: resort()
-    note right of ":Scheduler"
-        re-sort all the jobs in the database
-        by their effective priority by calling
-        get_eff_priority() on every job.
-    end note
-":Scheduler" --> ":Scheduler" --:
-
-
-
-     <-- ":Scheduler" : Message
-deactivate ":Scheduler"
+s --> db : message
+note right of db 
+    the messages contain the state of  
+    the jobs sent to the Dispatcher
+end note 
 
 @enduml
