@@ -98,7 +98,7 @@ s->db++ : get_work_machines()
 db-->s-- : wms: list[WorkMachine]
 
 loop wm in wms 
-    s -> db++: update_work_machine(wms)
+    s -> db++: update_work_machine(wm)
     note right of db
         update Work machine data
     end note
