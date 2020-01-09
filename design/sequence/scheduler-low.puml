@@ -105,6 +105,4 @@ loop wm in wms
 end
 
 
-destroy s
-
 @enduml
