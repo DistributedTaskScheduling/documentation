@@ -42,7 +42,6 @@ loop j in jobs
             on wm to run j.
         end note
         
-        s -> d
         s--> s--
 
         s -> j++: set_wm(wm)
@@ -74,6 +73,7 @@ loop j in jobs
 end
 
 s -> d++: set_distribution(jobs)
+
 
 d -> d++: get_changed_jobs()
 note right of d
