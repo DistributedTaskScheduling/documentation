@@ -24,8 +24,6 @@ end note
 sch --> sch --: finished_job:Job
 
 sch -> db ++ : finish_job(finished_job)
-db -> db ++: set_wc_status(finished_job.wc_id, WCStatus.AVAILABLE)
-db-->db --
 db -> db ++: set_job_status(finished_job, JobStatus.FINISHED)
 db-->db --
 
