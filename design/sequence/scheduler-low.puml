@@ -17,23 +17,27 @@ note right of s
 end note
 s --> s--: jobs
 
-s -> db++: get_available_workers()
+s -> db++: get_work_machines()
 note right of db
-    Return workers with free resources.
+    Returns all connected workers.
 end note
-db --> s--: available_wcs: list[WorkMachine]
+db --> s--: wms: list[WorkMachine]
 
 loop j in jobs
     
     s->s++ : preemption_threshold()
     s-->s-- : preemption : float
     
+    s->s++ : blocking_threshold()
+    s-->s-- : blocking : float
+    
     alt j.get_eff_priority > preemption
         s -> db++ : lowest_priority_wm()
         note right of s
-            Returns WorkMachine
-            whose jobs have the
-            lowest summed priority.
+            Returns WorkMachine where
+            the maximum priority
+            of the Jobs that would
+            need to be paused is lowest.
         end note
         db --> s--: wm: WorkMachine
         s -> s ++: pause(wm, j)
@@ -46,10 +50,7 @@ loop j in jobs
 
         s -> j++: set_wm(wm)
         j --> s--
-    
-    s->s++ : blocking_threshold()
-    s-->s-- : blocking : float
-    
+   
     else j.get_eff_priority > blocking
         s -> db++ : least_jobs_wm()
         note right of s
@@ -93,13 +94,13 @@ loop job in jobs
     db --> s--
 end
 
-s->db++ : get_work_machine()
-db-->s-- : wms
+s->db++ : get_work_machines()
+db-->s-- : wms: list[WorkMachine]
 
 loop wm in wms 
     s -> db++: update_work_machine(wms)
     note right of db
-        update Work machine datat
+        update Work machine data
     end note
     db --> s--
 end
