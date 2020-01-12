@@ -1,0 +1,38 @@
+\chapter{Design Patterns}
+    JobAdder's design is object-oriented. As such, it uses a lot of the common design patterns.
+    \section{Strategy}
+        The Strategy design pattern is used for abstracting away the scheduling algorithm specifics.
+        It allows a complete replacement of the algorithm, as well as easier testing of the other components.
+
+        The default scheduling algorithm itself uses several (Sub)Strategies: The ordering of jobs by their effective
+        priority(CostFunction) and the assignment of Work machines for jobs (JobDistributionPolicy).
+
+        Another Strategy is the DockerContext class. It allows the User client to control how the Dockerfile of the Job
+        is built.
+    \section{Template method}
+        The default JobDistributionPolicies all work in the same way - iterating over the available work machines,
+        calculating assignment cost, and then picking the machine with the lowest cost. Using a
+        base class DefaultJobDistributionPolicy which implements this logic, and leaving derived classes to implement
+        the template method \_assign\_machine\_cost allows better code reuse and structuring.
+
+    \section{Facade}
+        The Facade design pattern is evident in the ServerDatabase, where it allows a convenient usage of the underlying
+        database and acts as a gateway to the whole Server for all Commands sent from users and work machines.
+
+    \section{Proxy}
+        The Proxy design pattern in the Proxy subclasses allows easy access to remote components of JobAdder, without involving
+        network communication in most of the codebase.
+
+    \section{Abstract Factory}
+        The IWorkerProxyFactory is an Abstract Factory. This allows reuse of WorkerProxy objects, as well as decouples the Dispatcher
+        class from the Database class.
+
+    \section{Memento}
+        All classes that are Serializable can be thought of as a variation of the Memento design pattern.
+        These classes can convert their internal state to a dictionary and then be recreated from that.
+
+    \section{Observer}
+        The observer design patter is indirectly present in the design. The ServerDatabase provides two callbacks
+        for classes that need to process updates in the database(Scheduler and EmailNotifier). The SSHConnection class
+            provides the option to register a callback for the case when the connection is unexpectedly closed(used for
+            deregistering work machines). In both cases, it enables loose coupling between classes of different packages.
