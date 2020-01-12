@@ -1,0 +1,20 @@
+@startuml
+left to right direction
+
+actor User1
+actor User2
+
+rectangle JA {
+    usecase Server
+    User1 --> Server
+    User2 --> Server
+
+    rectangle ComputationalCluster {
+        usecase Worker1
+        Server --> Worker1
+        usecase Worker2
+        Server --> Worker2
+    }
+}
+
+@enduml
