@@ -1,0 +1,109 @@
+@startuml
+
+box "server"
+    participant ":Database" as db
+    participant ":Scheduler" as s
+    participant "j:Job" as j
+    participant ":Dispatcher" as d
+end box
+
+s++
+s -> db++: get_jobs()
+db --> s--: jobs: list[Job]
+
+s -> s++: sorted(jobs)
+note right of s
+    Sorts jobs list by effective priority.
+end note
+s --> s--: jobs
+
+s -> db++: get_work_machines()
+note right of db
+    Returns all connected workers.
+end note
+db --> s--: wms: list[WorkMachine]
+
+loop j in jobs
+    
+    s->s++ : preemption_threshold()
+    s-->s-- : preemption : float
+    
+    s->s++ : blocking_threshold()
+    s-->s-- : blocking : float
+    
+    alt j.get_eff_priority > preemption
+        s -> db++ : lowest_priority_wm()
+        note right of s
+            Returns WorkMachine where
+            the maximum priority
+            of the Jobs that would
+            need to be paused is lowest.
+        end note
+        db --> s--: wm: WorkMachine
+        s -> s ++: pause(wm, j)
+        note right of s
+            Pauses enough jobs
+            on wm to run j.
+        end note
+        
+        s--> s--
+
+        s -> j++: set_wm(wm)
+        j --> s--
+   
+    else j.get_eff_priority > blocking
+        s -> db++ : least_jobs_wm()
+        note right of s
+            Returns WorkMachine
+            with the least
+            amount of jobs.
+        end note
+        db --> s--: wm: WorkMachine
+        
+        s -> db++: set_state(wm, BLOCKED)
+        db-->s--
+    end
+    
+    loop wm in available_wms
+        alt wm.runs(j)
+            s -> j++: set_wm(wm)
+            j --> s--
+        end
+    end
+    
+end
+
+s -> d++: set_distribution(jobs)
+
+
+d -> d++: get_changed_jobs()
+note right of d
+    Jobs whose state has changed.
+end note
+d --> d-- : changed_jobs: list[Job]
+d -> d++: reset()
+d-->d--
+
+d --> s--
+
+loop job in jobs
+    s -> db++: update_job(job)
+    note right of db
+        update Job data
+    end note
+    db --> s--
+end
+
+s->db++ : get_work_machines()
+db-->s-- : wms: list[WorkMachine]
+
+loop wm in wms 
+    s -> db++: update_work_machine(wm)
+    note right of db
+        update Work machine data
+    end note
+    db --> s--
+end
+
+
+@enduml
