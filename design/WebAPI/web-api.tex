@@ -1,0 +1,65 @@
+\section{Web API}
+  \subsection{GET}
+    \begin{itemize}
+      \item \textbf{/v1/workmachines/workload}\\
+        Get statistics about workload of the connected worker machines.\\
+        Response: Status: 200 - OK
+        \begin{lstlisting}[language=Python, caption=Yaml response]
+        ---
+        machines:
+        - id: str
+          cpu_load: float
+          cpu_threads:
+            used: int
+            free: int
+          memory_load:
+            used: int
+            free: int
+          swap_space:
+            used: int
+            free: int
+        \end{lstlisting}
+      \item \textbf{/v1/jobs/\{jobId}\}\\
+       Get information about a job given its ID.\\
+       Response: Status: 200 - OK
+        \begin{lstlisting}[language=Python, caption=Yaml response]
+        ---
+        user_name: str
+        user_id: int
+        priority: str
+        status: str
+        scheduled_at: str
+        finished_at: str
+        spent_in_queue: str
+        time_spend_running: str
+        allocated_threads: int
+        utilization_of_threads: float
+        allocated_ram: int
+        utilization_of_ram: float
+        \end{lstlisting}
+      \item \textbf{/v1/user/\{userId\}/jobs}\\
+         Get a list of IDs of jobs belonging to a given user.\\
+         Response: Status: 200 - OK
+         \begin{lstlisting}[language=Python, caption=Yaml response]
+         ---
+         jobs:
+         - job_id: str
+         \end{lstlisting}
+      \item \textbf{/v1/jobs/hours/\{hours\}}\\
+         Get a list of IDs of jobs which have been running in the past X hours.\\
+         Response: Status: 200 - OK
+         \begin{lstlisting}[language=Python, caption=Yaml response]
+         ---
+         jobs:
+         - job_id: str
+         \end{lstlisting}
+      \item \textbf{/v1/workmachines/\{workmachineId\/jobs}\\
+         Get a list of IDs of jobs which are running on the work machine with the
+given ID.\\
+         Response: Status: 200 - OK
+         \begin{lstlisting}[language=Python, caption=Yaml response]
+         ---
+         jobs:
+         - job_id: str
+         \end{lstlisting}
+    \end{itemize}
