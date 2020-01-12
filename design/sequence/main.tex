@@ -1,0 +1,15 @@
+\chapter{Sequence diagrams}
+The following sequence diagrams describe the detailed interaction between individual classes of JobAdder:
+    \section{User client}
+        \includegraphics[width=\linewidth]{sequence/userclient-cli.png}
+    \section{Network communication}
+        \subsection{Oneshot message passing}
+            \includegraphics[width=\linewidth]{sequence/proxy-one-message.png}
+        \subsection{Continuous message passing}
+            \includegraphics[width=\linewidth]{sequence/proxy-continuous.png}
+        \subsection{Handling of remote commands on the server}
+            \includegraphics[width=\linewidth]{sequence/server-local-request.png}
+        \subsection{Worker updates job status on the server}
+            \includegraphics[width=\linewidth]{sequence/finish-sd.png}
+    \section{Rescheduling of jobs}
+            \includegraphics[height=0.95\textheight]{sequence/scheduler-low.png}
