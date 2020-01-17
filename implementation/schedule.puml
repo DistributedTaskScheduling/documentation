@@ -1,0 +1,68 @@
+@startgantt
+scale 2
+
+monday are closed
+Project starts the 13th of january 2020
+
+[Job class] lasts 5 days
+[Database types] lasts 5 days
+
+[Basic types completed] lasts 1 days
+[Basic types completed] starts at [Job class]'s end
+[Basic types completed] starts at [Database types]'s end
+
+
+-- server --
+[Mock Database] lasts 3 days and starts at [Basic types completed]'s end
+[SQL Database] lasts 6 days and starts 7 days after [Basic types completed]'s end
+
+[Scheduler + Dummy algorithm] lasts 4 days and starts at [Mock Database]'s end
+[WebAPI] lasts 3 days and starts 4 days after [Mock Database]'s end
+[Notifier] lasts 2 days and starts 4 days after [Mock Database]'s end
+
+[Default policies] lasts 4 days and starts at [Basic types completed]'s end
+then [Default algorithm] lasts 3 days
+
+[IWorkerProxy] lasts 2 days and starts at [Basic types completed]'s end
+then [IProxyFactory] lasts 2 days
+then [Dispatcher] lasts 5 days
+
+[Worker->Server messages] lasts 3 days and starts 7 days after [Mock Database]'s end
+[ServerConfig] lasts 4 days and starts at 28th of january 2020
+
+[ServerMain] lasts 2 days and starts at [SQL Database]'s end
+[ServerMain] starts at [Scheduler + Dummy algorithm]'s end
+[ServerMain] starts at [WebAPI]'s end
+[ServerMain] starts at [Notifier]'s end
+[ServerMain] starts at [Dispatcher]'s end
+
+
+-- user client --
+[User Config] lasts 4 days and starts at the 18th of january 2020
+[User->Server messages] lasts 5 days and starts 7 days after [Mock Database]'s end
+[IServerProxy] lasts 3 days and starts at [Basic types completed]'s end
+then [CLIHandler] lasts 5 days
+
+
+-- worker --
+[WorkerConfig] lasts 2 days and starts at 21th of january 2020
+then [DockerEvents] lasts 5 days
+then [IServerProxy] lasts 2 days
+then [WorkerMain] lasts 2 days
+then [Server->Worker messages] lasts 2 days
+
+
+-- proxies --
+[ISSHConnection] lasts 2 days and starts at 28th of january 2020
+[SSHConnection] lasts 4 days and starts at 28th of january 2020
+
+[UserServerProxy] lasts 3 days and starts at [SSHConnection]'s end
+[UserServerProxy] starts at [User->Server messages]'s end
+
+[WorkerServerProxy] lasts 3 days and starts at [SSHConnection]'s end
+[WorkerServerProxy] starts at [Worker->Server messages]'s end
+
+[WorkerProxy] lasts 3 days and starts at [SSHConnection]'s end
+[WorkerProxy] starts at [Server->Worker messages]'s end
+
+@endgantt
