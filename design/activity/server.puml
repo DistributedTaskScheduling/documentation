@@ -1,0 +1,41 @@
+@startuml
+start
+repeat
+    :Wait for ServerCommand;
+    if (User has necessary permissions?) then (yes)
+        if (is QueryCommand) then (yes)
+            :Get information from Database;
+            :QueryResponse;
+        elseif (is AddCommand?) then (yes)
+            :Add Job to Database;
+            :SuccessResponse;
+            :Re-schedule and dispatch Jobs;
+        elseif (is CancelCommand?) then (yes)
+            :Set JobStatus in Database to CANCELED;
+            :Notify Job owner;
+            :SuccessResponse;
+            :Re-schedule and dispatch Jobs;
+        elseif (is JobDoneCommand?) then (yes)
+            :Set JobStatus in Database to DONE;
+            :Notify Job owner;
+            :SuccessResponse;
+            :Re-schedule and dispatch Jobs;
+        elseif (is JobCrashedCommand?) then (yes)
+            :Set JobStatus in Database to CRASHED;
+            :Notify Job owner;
+            :SuccessResponse;
+            :Re-schedule and dispatch Jobs;
+        elseif (is RegisterWorkerCommand?) then (yes)
+            :Add WorkerClient to Database;
+            :SuccessResponse;
+            :Re-schedule and dispatch Jobs;
+        elseif (is RetireWorkerCommand?) then (yes)
+            :Set WorkerClient.is_retired\nin Database to True;
+            :SuccessResponse;
+        else (no)
+            :ErrorResponse;
+        endif
+    else (no)
+        :ErrorResponse;
+    endif
+@enduml
